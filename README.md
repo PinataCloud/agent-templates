@@ -10,7 +10,7 @@ Templates are the fastest way to get a working agent. Instead of configuring eve
 ## 📦 Agent Template Categories
 Templates should be grouped based on the *role the agent plays* in a system.
 
-### 1. 🛰️ Monitoring & Alerts
+### 1. 🛰️ [Monitoring & Alerts](./monitoring-and-alerts)
 Agents that observe systems, detect changes, and notify or trigger actions.
 
 **Use this for:**
@@ -26,7 +26,7 @@ Agents that observe systems, detect changes, and notify or trigger actions.
 
 ---
 
-### 2. ⚙️ Actions & Transactions
+### 2. ⚙️ [Actions & Transactions](./actions-and-transactions)
 Agents that take actions on behalf of a user or system, especially involving external services or state changes.
 
 **Use this for:**
@@ -42,7 +42,7 @@ Agents that take actions on behalf of a user or system, especially involving ext
 
 ---
 
-### 3. 🔎 Data Extraction & Summarization
+### 3. 🔎 [Data Extraction & Summarization](./data-extraction-and-summarization)
 Agents that read, process, and condense information into usable outputs.
 
 **Use this for:**
@@ -58,7 +58,7 @@ Agents that read, process, and condense information into usable outputs.
 
 ---
 
-### 4. 💬 Interaction & Interfaces
+### 4. 💬 [Interaction & Interfaces](./interaction-and-interfaces)
 Agents that directly interact with users or act as an interface layer.
 
 **Use this for:**
@@ -73,7 +73,7 @@ Agents that directly interact with users or act as an interface layer.
 
 ---
 
-### 5. 🧩 Orchestration & Multi-Agent Systems
+### 5. 🧩 [Orchestration & Multi-Agent Systems](./orchestration-and-multi-agent)
 Agents that coordinate other agents, tools, or workflows.
 
 **Use this for:**
