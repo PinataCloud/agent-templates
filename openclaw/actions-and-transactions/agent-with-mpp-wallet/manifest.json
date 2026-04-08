@@ -11,7 +11,7 @@
     "category": "actions & transactions",
     "tags": ["tempo", "wallet", "payments", "mpp"],
     "authorName": "Pinata",
-    "authorUrl": "https://github.com/PinataCloud/agent-templates/tree/main/actions-and-transactions/agent-with-mpp-wallet",
+    "authorUrl": "https://github.com/PinataCloud/agent-templates/tree/main/openclaw/actions-and-transactions/agent-with-mpp-wallet",
     "authorLogoUrl": "https://pinataassets.cloud/partner-logos/mark-black.png"
   },
   "scripts": {
