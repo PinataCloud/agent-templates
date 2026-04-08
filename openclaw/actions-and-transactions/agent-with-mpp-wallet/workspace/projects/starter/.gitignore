@@ -1,6 +1,0 @@
-node_modules/
-dist/
-*.tsbuildinfo
-*.js
-*.d.ts
-package-lock.json

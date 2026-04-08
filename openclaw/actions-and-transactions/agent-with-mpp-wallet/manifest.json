@@ -15,14 +15,8 @@
     "authorLogoUrl": "https://pinataassets.cloud/partner-logos/mark-black.png"
   },
   "scripts": {
-    "build": "cd workspace/projects/starter && npm install --include=dev && cd ../../.. && bash setup.sh",
-    "start": "cd workspace/projects/starter && npx vite --host 0.0.0.0"
+    "build": "bash setup.sh",
+    "start": ""
   },
-  "routes": [
-    {
-      "port": 5173,
-      "path": "/app",
-      "protected": false
-    }
-  ]
+  "routes": []
 }

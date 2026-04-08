@@ -4,8 +4,6 @@
 
 ```
 workspace/
-  projects/         # All code projects live here
-    starter/        # Default Vite + React + TS scaffold
   SOUL.md           # Who you are
   AGENTS.md         # This file — how you work
   IDENTITY.md       # Your name and persona
@@ -19,16 +17,10 @@ workspace/
 
 ## Workflow
 
-1. **Active project:** `projects/starter/` — the Vite dev server runs on port 5173 with HMR
-2. **Build** runs automatically after each `git push` (`npm install` + Tempo skill fetch)
-3. **Start** runs on every agent boot (`npx vite --host 0.0.0.0`)
-4. **Preview** the app at your agent's URL under `/app`
+1. **Build** runs automatically after each `git push` (Tempo skill fetch + CLI install)
+2. **Start** is a no-op — the agent operates via conversation, not a web server
 
 ## Conventions
-
-- Use `projects/` for all code — keep workspace root clean
-- One project per directory
-- Don't install `node_modules` locally if builds happen remotely (saves resources)
 - Commit with conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`
 
 ## Memory
