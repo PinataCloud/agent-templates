@@ -1,28 +1,44 @@
 {
+  "$schema": "https://agents.pinata.cloud/schemas/manifest.v1.json",
   "version": 1,
+
   "agent": {
     "name": "MoonPay On-Ramp Concierge",
     "description": "Your personal crypto guide powered by the MoonPay CLI. Research tokens, check safety, and go from fiat to crypto in minutes. Friendly enough for first-timers, powerful enough for power users.",
     "vibe": "friendly, patient, educational — meets users where they are, never pushy",
     "emoji": "🚀"
   },
+
   "template": {
     "slug": "moonpay-onramp-concierge",
-    "category": "interaction & interfaces",
+    "category": "general",
     "tags": ["moonpay", "onramp", "buy-crypto", "fiat", "token-research", "beginner-friendly"],
-    "authorName": "MoonPay",
-    "authorUrl": "https://github.com/tonyagents/moonpay-agent-templates/tree/main/openclaw/interaction-and-interfaces/moonpay-onramp-concierge",
-    "authorLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
+    "partnerName": "MoonPay",
+    "partnerUrl": "https://www.moonpay.com",
+    "partnerLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
   },
+
+  "secrets": [
+    {
+      "name": "MOONPAY_EMAIL",
+      "description": "Your email address — used to log into the MoonPay CLI on first run",
+      "required": true
+    }
+  ],
+
   "scripts": {
     "build": "bash setup.sh",
     "start": ""
   },
-  "secrets": [
+
+  "tasks": [
     {
-      "name": "MOONPAY_EMAIL",
-      "description": "Your email address — used to log into the MoonPay CLI on first run"
+      "name": "watchlist-check",
+      "prompt": "Check MEMORY.md for any tokens the user is watching. Pull current prices and 24h changes. If any token is up or down more than 10% since the last check, send a brief update to the user. Keep it short — one line per token.",
+      "schedule": "0 9 * * *",
+      "enabled": true
     }
   ],
+
   "routes": []
 }

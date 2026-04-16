@@ -1,28 +1,50 @@
 {
+  "$schema": "https://agents.pinata.cloud/schemas/manifest.v1.json",
   "version": 1,
+
   "agent": {
     "name": "MoonPay DeFi Portfolio Manager",
     "description": "A full-stack DeFi agent powered by the MoonPay CLI. Research tokens, check safety, buy crypto with fiat, execute swaps across chains, and set up automated DCA strategies — all from one agent.",
     "vibe": "sharp, data-driven, always confirms before executing any transaction",
     "emoji": "🌙"
   },
+
   "template": {
     "slug": "moonpay-defi-portfolio",
-    "category": "actions & transactions",
+    "category": "defi",
     "tags": ["moonpay", "defi", "portfolio", "swap", "dca", "onramp", "crypto"],
-    "authorName": "MoonPay",
-    "authorUrl": "https://github.com/tonyagents/moonpay-agent-templates/tree/main/openclaw/actions-and-transactions/moonpay-defi-portfolio",
-    "authorLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
+    "partnerName": "MoonPay",
+    "partnerUrl": "https://www.moonpay.com",
+    "partnerLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
   },
+
+  "secrets": [
+    {
+      "name": "MOONPAY_EMAIL",
+      "description": "Your email address — used to log into the MoonPay CLI on first run",
+      "required": true
+    }
+  ],
+
   "scripts": {
     "build": "bash setup.sh",
     "start": ""
   },
-  "secrets": [
+
+  "tasks": [
     {
-      "name": "MOONPAY_EMAIL",
-      "description": "Your email address — used to log into the MoonPay CLI on first run"
+      "name": "daily-portfolio-check",
+      "prompt": "Run the daily portfolio check: pull balances and PnL for all wallets, flag any tokens up or down more than 10% since yesterday, and summarize in MEMORY.md. If any wallet is low on gas, alert the user.",
+      "schedule": "0 9 * * *",
+      "enabled": true
+    },
+    {
+      "name": "weekly-dca-reminder",
+      "prompt": "Check MEMORY.md for any active DCA strategies. Report to the user: what ran this week, total spent, current position sizes. Ask if they want to adjust any strategy.",
+      "schedule": "0 10 * * 1",
+      "enabled": true
     }
   ],
+
   "routes": []
 }
