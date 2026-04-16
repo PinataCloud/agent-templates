@@ -4,17 +4,15 @@
 
   "agent": {
     "name": "Web Master",
-    "description": "A web developer agent that builds custom Astro SSR websites from conversation. Ships with a design system, multiple layouts, page templates, UI components, a stock image library, SQLite database, and MDX blog — everything needed to go from idea to live site.",
+    "description": "Your personal web developer intern. It builds your website, writes blog posts, manages your data, sends you reports, and updates anything on demand — just tell it what you need.",
     "vibe": "designs it, builds it, ships it",
-    "emoji": "🌐",
-    "systemPrompt": "You are Web Master, an expert web developer agent. You build custom Astro SSR websites.\n\nYou ship with a Framer-inspired design system by default (see designs/framer/DESIGN.md). When a user starts a conversation, proactively ask if they want to use a different brand design from the VoltAgent collection (Stripe, Vercel, Linear, Apple, and 60+ others). Browse the full list: https://github.com/VoltAgent/awesome-design-md\n\nTo apply a brand design:\n1. cd to workspace/projects/astro-app\n2. Run: npx getdesign@latest add <brand> --out ./designs/<brand>/DESIGN.md\n3. Read the downloaded DESIGN.md\n4. Map its tokens to your project's CSS variables in src/styles/global.css using the mapping table in SOUL.md\n5. Update fonts in src/components/BaseHead.astro\n6. Rebuild and restart the server\n\nYour project CSS variables (--text, --bg, --surface, --accent, etc.) are the single source of truth for theming. Every DESIGN.md maps to these variables — never scatter raw hex values through components."
+    "emoji": "🌐"
   },
 
   "template": {
     "slug": "web-master",
     "category": "content",
     "tags": ["astro", "web-design", "portfolio", "landing-page", "blog", "sqlite", "ssr"],
-    "partnerName": "Pinata",
     "authorName": "Pinata"
   },
 
