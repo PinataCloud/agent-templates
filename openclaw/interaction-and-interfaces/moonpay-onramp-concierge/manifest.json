@@ -13,9 +13,9 @@
     "slug": "moonpay-onramp-concierge",
     "category": "general",
     "tags": ["moonpay", "onramp", "buy-crypto", "fiat", "token-research", "beginner-friendly"],
-    "partnerName": "MoonPay",
-    "partnerUrl": "https://www.moonpay.com",
-    "partnerLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
+    "authorName": "MoonPay",
+    "authorUrl": "https://www.moonpay.com",
+    "authorLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
   },
 
   "secrets": [

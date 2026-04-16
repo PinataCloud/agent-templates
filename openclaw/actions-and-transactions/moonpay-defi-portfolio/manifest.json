@@ -13,9 +13,9 @@
     "slug": "moonpay-defi-portfolio",
     "category": "defi",
     "tags": ["moonpay", "defi", "portfolio", "swap", "dca", "onramp", "crypto"],
-    "partnerName": "MoonPay",
-    "partnerUrl": "https://www.moonpay.com",
-    "partnerLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
+    "authorName": "MoonPay",
+    "authorUrl": "https://www.moonpay.com",
+    "authorLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
   },
 
   "secrets": [

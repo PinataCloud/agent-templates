@@ -13,9 +13,9 @@
     "slug": "moonpay-prediction-trader",
     "category": "defi",
     "tags": ["moonpay", "prediction-markets", "polymarket", "kalshi", "trading", "monitoring"],
-    "partnerName": "MoonPay",
-    "partnerUrl": "https://www.moonpay.com",
-    "partnerLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
+    "authorName": "MoonPay",
+    "authorUrl": "https://www.moonpay.com",
+    "authorLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
   },
 
   "secrets": [
