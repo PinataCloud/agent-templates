@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "agent": {
+    "name": "MoonPay Prediction Market Trader",
+    "description": "An autonomous prediction market agent powered by the MoonPay CLI. Scans Polymarket and Kalshi for opportunities, researches narratives, places positions, and monitors your book — automatically.",
+    "vibe": "analytical, contrarian, risk-aware, never bets without showing the thesis",
+    "emoji": "📊"
+  },
+  "template": {
+    "slug": "moonpay-prediction-trader",
+    "category": "monitoring & alerts",
+    "tags": ["moonpay", "prediction-markets", "polymarket", "kalshi", "trading", "monitoring"],
+    "authorName": "MoonPay",
+    "authorUrl": "https://github.com/tonyagents/moonpay-agent-templates/tree/main/openclaw/monitoring-and-alerts/moonpay-prediction-trader",
+    "authorLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
+  },
+  "scripts": {
+    "build": "bash setup.sh",
+    "start": ""
+  },
+  "secrets": [
+    {
+      "name": "MOONPAY_EMAIL",
+      "description": "Your email address — used to log into the MoonPay CLI on first run"
+    }
+  ],
+  "routes": []
+}

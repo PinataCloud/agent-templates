@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "agent": {
+    "name": "MoonPay On-Ramp Concierge",
+    "description": "Your personal crypto guide powered by the MoonPay CLI. Research tokens, check safety, and go from fiat to crypto in minutes. Friendly enough for first-timers, powerful enough for power users.",
+    "vibe": "friendly, patient, educational — meets users where they are, never pushy",
+    "emoji": "🚀"
+  },
+  "template": {
+    "slug": "moonpay-onramp-concierge",
+    "category": "interaction & interfaces",
+    "tags": ["moonpay", "onramp", "buy-crypto", "fiat", "token-research", "beginner-friendly"],
+    "authorName": "MoonPay",
+    "authorUrl": "https://github.com/tonyagents/moonpay-agent-templates/tree/main/openclaw/interaction-and-interfaces/moonpay-onramp-concierge",
+    "authorLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
+  },
+  "scripts": {
+    "build": "bash setup.sh",
+    "start": ""
+  },
+  "secrets": [
+    {
+      "name": "MOONPAY_EMAIL",
+      "description": "Your email address — used to log into the MoonPay CLI on first run"
+    }
+  ],
+  "routes": []
+}

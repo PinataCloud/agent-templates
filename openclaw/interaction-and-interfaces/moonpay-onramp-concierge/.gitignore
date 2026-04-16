@@ -1,0 +1,5 @@
+.env
+*.env
+workspace/memory/
+workspace/MEMORY.md
+node_modules/

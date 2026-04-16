@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "agent": {
+    "name": "MoonPay DeFi Portfolio Manager",
+    "description": "A full-stack DeFi agent powered by the MoonPay CLI. Research tokens, check safety, buy crypto with fiat, execute swaps across chains, and set up automated DCA strategies — all from one agent.",
+    "vibe": "sharp, data-driven, always confirms before executing any transaction",
+    "emoji": "🌙"
+  },
+  "template": {
+    "slug": "moonpay-defi-portfolio",
+    "category": "actions & transactions",
+    "tags": ["moonpay", "defi", "portfolio", "swap", "dca", "onramp", "crypto"],
+    "authorName": "MoonPay",
+    "authorUrl": "https://github.com/tonyagents/moonpay-agent-templates/tree/main/openclaw/actions-and-transactions/moonpay-defi-portfolio",
+    "authorLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
+  },
+  "scripts": {
+    "build": "bash setup.sh",
+    "start": ""
+  },
+  "secrets": [
+    {
+      "name": "MOONPAY_EMAIL",
+      "description": "Your email address — used to log into the MoonPay CLI on first run"
+    }
+  ],
+  "routes": []
+}
