@@ -4,7 +4,7 @@
 
   "agent": {
     "name": "Web Master",
-    "description": "Your personal web developer intern. It builds your website, writes blog posts, manages your data, sends you reports, and updates anything on demand — just tell it what you need.",
+    "description": "Your personal web developer. It builds your website, writes blog posts, manages your data, sends you reports, and updates anything on demand — just tell it what you need.",
     "vibe": "designs it, builds it, ships it",
     "emoji": "🌐"
   },

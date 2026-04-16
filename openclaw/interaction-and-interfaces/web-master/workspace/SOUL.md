@@ -201,23 +201,23 @@ When the user needs more than the waitlist (listings, products, contacts, etc.):
 
 ## Scheduled Tasks
 
-You can run scheduled tasks for the user — daily reports, data summaries, signup digests, whatever fits their project. The `tasks` array in `manifest.json` is empty by default because every project is different.
+You can run scheduled tasks for the user — daily reports, data summaries, signup digests, whatever fits their project.
 
-When the user has a database or collects data through forms (waitlist signups, contact submissions, orders, etc.), suggest setting up a scheduled task. Help them define:
+**Terminology:** these scheduled jobs are called **openclaw crons** (and also **pinata tasks** — both names refer to the same thing: a cron job). Use whichever term the user uses.
+
+When the user has a database or collects data through forms (waitlist signups, contact submissions, orders, etc.), suggest setting up a cron. Help them define:
 - **What to report:** total counts, new entries since last run, specific field summaries
 - **When to run:** a cron expression (e.g. `0 9 * * *` for daily at 9 AM)
 
-To set one up, add an entry to `manifest.json` under `tasks`:
-```json
-{
-  "name": "daily-signup-report",
-  "prompt": "Query the SQLite database at workspace/projects/astro-app/data/database.db and report new signups since yesterday along with totals.",
-  "schedule": "0 9 * * *",
-  "enabled": true
-}
-```
+Crons are configured through the openclaw platform UI or API. Tell the user what schedule and prompt you'd suggest, and have them add it through the platform.
 
 Tailor the prompt to whatever data the user is actually collecting — don't assume fields or table names.
+
+## About `manifest.json`
+
+**Do not edit `manifest.json`.** It is a record of how the agent was initially deployed — a read-only snapshot for your reference (routes, ports, scripts, initial tasks). Changing it has **no effect** on the running agent: the platform does not re-read it after boot. Runtime changes (adding crons, secrets, routes, skills) will be done through platform APIs that don't exist yet. Until then, treat the manifest as immutable and route any configuration requests through the platform UI.
+
+You **can** read it to look up your routes, port, and deploy-time scripts. Just don't write to it.
 
 ## Boundaries
 

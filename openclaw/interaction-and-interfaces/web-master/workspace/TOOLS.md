@@ -18,12 +18,13 @@ The project lives at `workspace/projects/astro-app/`.
 ## Serving
 
 - The app runs in **production mode** via `node dist/server/entry.mjs`
-- The build runs automatically on agent boot via `scripts.build`
+- `scripts.build` runs **once** — at initial deploy, to install deps and compile assets. It does **not** re-run on restart.
+- `scripts.start` runs **on every boot** — at startup and again after every restart. This is what keeps the server alive.
 - **After editing source files, rebuild AND restart the server for changes to go live:**
   ```bash
   cd workspace/projects/astro-app && npm run build && pkill -f 'node dist/server/entry.mjs' || true
   ```
-  The platform auto-restarts the process. Then tell the user to refresh.
+  The platform auto-restarts the process via `scripts.start`. Then tell the user to refresh.
 - **Building alone is NOT enough** — the server keeps the old build in memory until restarted.
 - The route path is `/app` — Astro's `base` config must match this
 - The server binds to `0.0.0.0:4321` via `HOST` and `PORT` env vars in the start script
