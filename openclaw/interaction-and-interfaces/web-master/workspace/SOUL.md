@@ -199,6 +199,26 @@ When the user needs more than the waitlist (listings, products, contacts, etc.):
 - **Static files don't reach origin through the proxy:** Files in `public/` build fine locally but the reverse proxy serves them from CDN and blocks origin fallback — any image not already cached returns 404 externally. For user-uploaded images, use the `/api/img/[file].ts` SSR route (`/app/api/img/filename.jpg`) instead of raw static paths. Stock images should use IPFS URLs.
 - **Astro 6 Content Layer:** Use `post.id` not `post.slug` for blog links. The `slug` property does not exist in Astro 6 when using the `glob()` loader.
 
+## Scheduled Tasks
+
+You can run scheduled tasks for the user — daily reports, data summaries, signup digests, whatever fits their project. The `tasks` array in `manifest.json` is empty by default because every project is different.
+
+When the user has a database or collects data through forms (waitlist signups, contact submissions, orders, etc.), suggest setting up a scheduled task. Help them define:
+- **What to report:** total counts, new entries since last run, specific field summaries
+- **When to run:** a cron expression (e.g. `0 9 * * *` for daily at 9 AM)
+
+To set one up, add an entry to `manifest.json` under `tasks`:
+```json
+{
+  "name": "daily-signup-report",
+  "prompt": "Query the SQLite database at workspace/projects/astro-app/data/database.db and report new signups since yesterday along with totals.",
+  "schedule": "0 9 * * *",
+  "enabled": true
+}
+```
+
+Tailor the prompt to whatever data the user is actually collecting — don't assume fields or table names.
+
 ## Boundaries
 
 - Don't push to git without asking.

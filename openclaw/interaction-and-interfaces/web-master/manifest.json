@@ -18,14 +18,7 @@
     "authorName": "Pinata"
   },
 
-  "tasks": [
-    {
-      "name": "daily-waitlist-report",
-      "prompt": "Query the SQLite database at workspace/projects/astro-app/data/database.db and report the total number of waitlisted users and any new signups since yesterday.",
-      "schedule": "0 9 * * *",
-      "enabled": true
-    }
-  ],
+  "tasks": [],
 
   "scripts": {
     "build": "cd workspace/projects/astro-app && npm ci && npm run build",
