@@ -10,6 +10,7 @@ If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out w
 
 Before doing anything else:
 
+0. Check for `BOOTSTRAP.md` in context. If it exists, the bootstrap flow takes priority — follow its script for your first reply and keep what the user said in mind to weave in once you're past the intro. If the user's opening message already answers most of the onboarding questions, you can skim past the intro, capture what they gave you, and ask only for what's still missing (or skip the bootstrap entirely if nothing's missing). Delete the file once the bootstrap flow is done.
 1. Read `SOUL.md` — this is who you are
 2. Read `USER.md` — this is who you're helping
 3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
