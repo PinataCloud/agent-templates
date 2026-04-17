@@ -107,6 +107,7 @@ Before building, gather context. Don't interrogate — let it flow.
 - **Brand colors?** Pull from their site or tweak the DESIGN.md palette.
 - **Photos?** Ask. Sites without images look empty. Guide them on naming + `/public`.
 - **Content?** What pages, listings, products, posts.
+- **Private data or login needed?** Default is **no auth**. Keep it only if something on the site is meant for the owner alone (internal reports, dashboards, drafts) or stores end-user information tied to identity (customer accounts, saved state). If all outputs flow through a channel the user already owns — Telegram bot, email, Slack — no login needed. If unclear, ask before deciding: "who should see this?" See **Authentication Module → When to keep this module** below for the decision criteria and examples.
 
 If they give you a reference site, **match it closely but improve it** — cleaner layout, better typography, modern CSS. Don't reinvent their brand. If they give nothing, use the active DESIGN.md with placeholder content they can swap.
 
@@ -260,9 +261,52 @@ The vanilla template ships a working example of each module so users can see wha
 
 ## Authentication Module
 
-**Status:** built-in. Uses [Better Auth](https://better-auth.com/docs/integrations/astro) — the current standard for Astro (Lucia was deprecated in 2025), TypeScript-first, SQLite-backed via our existing `data/database.db`.
+**Status:** built-in but **off by default**. The vanilla template ships it wired up so you have a working reference, but you should **remove it unless the use case clearly needs login**. Uses [Better Auth](https://better-auth.com/docs/integrations/astro) — the current standard for Astro (Lucia was deprecated in 2025), TypeScript-first, SQLite-backed via our existing `data/database.db`.
 
-**Files:**
+### When to keep this module
+
+**Default: remove.** Most sites don't need auth. Keep the module only if one of these is true:
+
+**Keep it when:**
+- The site shows the **owner's private info** — sales numbers, internal reports, dashboards, drafts, anything "only I should see".
+- The site stores **end-user information tied to identity** — customer accounts, "my orders", saved state per visitor.
+- The user explicitly says "logged-in area", "admin page", "members only", "my team's dashboard".
+
+**Remove it when:**
+- All outputs flow through a channel the user already owns — **Telegram** bot receives submissions, **email** receives contact forms, **Slack** gets notifications. The site writes out; nothing on the site is read back privately.
+- The site is a **landing page, marketing site, blog, public store, or portfolio**.
+- Forms submit to external services (Formspree, email, webhook) without persisting per-visitor state.
+
+**Ask before deciding when the ask is ambiguous:**
+- *"I want to share my monthly sales in a website"* → who sees it? Owner-only / investors / public? If private → keep auth. If public → remove.
+- *"I want a store"* → do customers need "my orders" / "my account"? If yes → keep. If Stripe checkout + email receipts is enough → remove.
+- *"A contact form"* → does anything persist on the site, or does it just email/Telegram the owner? Persist → maybe keep. Just forward → remove.
+- Anything that mentions *"keep my users' information"*, *"track who did what"*, *"only logged-in people"* → keep.
+
+**Concrete examples:**
+
+| User says | Decision |
+|---|---|
+| "A store I control fully from Telegram plus a contact form" | Remove auth |
+| "A blog about hiking" | Remove auth |
+| "An internal dashboard for my team's monthly numbers" | Keep auth |
+| "A site where customers can track their orders" | Keep auth (customer accounts) |
+| "A portfolio" | Remove auth |
+| "A place where my staff submits reports" | Keep auth (see *Advanced* below) |
+
+### Advanced: admin vs user roles
+
+**Not built in. Do not implement unless the user explicitly asks.** Flag it as possible, confirm before scoping.
+
+Signal to surface the question: the user describes a *write vs. read split* — "anyone on my team can submit reports, only I see the combined view", "clients upload files, only I review them", "staff adds entries, I approve them". Two roles (admin + user) solve this; one role doesn't.
+
+When you spot this, say something like: *"Sounds like you want different permissions for different people — staff can submit, but only you can see everything combined. That's a second role on top of auth, a bit more complex than a single-login site. Want me to build that, or is a single shared login enough for now?"*
+
+Then wait for an answer. If they say yes, scope it — Better Auth supports it via a `role` field on the user table (lightweight) or the official admin plugin (heavier). Don't pre-build it.
+
+**Out of scope for this template (by design):** 2FA, email verification, password reset via email, OAuth providers, orgs/teams/workspaces, impersonation, audit logs.
+
+### Files
 
 | File | Purpose |
 |---|---|
