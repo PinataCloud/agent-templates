@@ -1,0 +1,112 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const base = import.meta.env.BASE_URL;
+if (Astro.locals.user) return Astro.redirect(`${base}/reports`);
+---
+
+<Layout title="Sign in" description="Sign in to access protected pages.">
+  <section class="login">
+    <h1>Sign in</h1>
+    <form id="login-form" method="post" action={`${base}/login`} autocomplete="on">
+      <label>
+        Email
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label>
+        Password
+        <input type="password" name="password" required autocomplete="current-password" />
+      </label>
+      <button type="submit">Sign in</button>
+      <p id="err" class="err" hidden></p>
+    </form>
+  </section>
+</Layout>
+
+<script>
+  const base = import.meta.env.BASE_URL;
+  const form = document.getElementById("login-form");
+  const err = document.getElementById("err");
+
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!err) return;
+    err.hidden = true;
+    const fd = new FormData(form as HTMLFormElement);
+    const res = await fetch(`${base}/api/auth/sign-in/email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: fd.get("email"),
+        password: fd.get("password"),
+      }),
+    });
+    if (res.ok) {
+      window.location.href = `${base}/reports`;
+    } else {
+      const data = await res.json().catch(() => ({}));
+      err.textContent = data.message || "Invalid email or password";
+      err.hidden = false;
+    }
+  });
+</script>
+
+<style>
+  .login {
+    max-width: 24rem;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .login h1 {
+    margin: 0 0 1.5rem;
+    font-family: var(--display);
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  input {
+    padding: 0.65rem 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font: inherit;
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  button {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button:hover {
+    background: var(--accent-hover);
+  }
+  .err {
+    margin: 0;
+    color: #ff6464;
+    font-size: 0.85rem;
+  }
+</style>

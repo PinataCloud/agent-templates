@@ -13,10 +13,12 @@ interface Props {
 
 const { title, description, fullWidth = false, brand = 'Web Master', links } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const user = Astro.locals.user;
 const navLinks = links ?? [
   { label: 'Home', href: base },
   { label: 'Blog', href: `${base}/blog` },
   { label: 'Templates', href: `${base}/template` },
+  { label: 'Reports', href: `${base}/reports` },
 ];
 ---
 
@@ -33,6 +35,11 @@ const navLinks = links ?? [
           {navLinks.map(link => (
             <Link href={link.href}><Text variant="link">{link.label}</Text></Link>
           ))}
+          {user ? (
+            <button type="button" id="signout-btn" class="signout"><Text variant="link">Sign out</Text></button>
+          ) : (
+            <Link href={`${base}/login`}><Text variant="link">Sign in</Text></Link>
+          )}
         </div>
       </div>
     </nav>
@@ -44,6 +51,18 @@ const navLinks = links ?? [
         <Text variant="caption">Built with Astro + SQLite</Text>
       </div>
     </footer>
+
+    <script>
+      const base = import.meta.env.BASE_URL;
+      document.getElementById("signout-btn")?.addEventListener("click", async () => {
+        await fetch(`${base}/api/auth/sign-out`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: "{}",
+        });
+        window.location.href = base;
+      });
+    </script>
   </body>
 </html>
 
@@ -80,7 +99,17 @@ const navLinks = links ?? [
 
   .nav-links {
     display: flex;
+    align-items: center;
     gap: 2rem;
+  }
+
+  button.signout {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
   }
 
   main.contained {

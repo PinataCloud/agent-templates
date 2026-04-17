@@ -1,0 +1,83 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const base = import.meta.env.BASE_URL;
+if (!Astro.locals.user) return Astro.redirect(`${base}/login`);
+
+const { user } = Astro.locals;
+---
+
+<Layout title="Reports" description="Internal reports — signed-in only.">
+  <section class="reports">
+    <header>
+      <h1>Reports</h1>
+      <button type="button" id="reports-signout">Sign out</button>
+    </header>
+    <p class="hello">Signed in as <strong>{user!.email}</strong>.</p>
+    <div class="card">
+      <h2>Waitlist snapshot</h2>
+      <p>This is a protected page. Put signup counts, revenue, any internal data here.</p>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const base = import.meta.env.BASE_URL;
+  document.getElementById("reports-signout")?.addEventListener("click", async () => {
+    await fetch(`${base}/api/auth/sign-out`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    });
+    window.location.href = `${base}/login`;
+  });
+</script>
+
+<style>
+  .reports {
+    max-width: var(--max-w);
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  h1 {
+    margin: 0;
+    font-family: var(--display);
+  }
+  button {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font: inherit;
+    cursor: pointer;
+  }
+  button:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+  .hello {
+    color: var(--text-muted);
+    margin: 0 0 2rem;
+  }
+  .card {
+    padding: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .card h2 {
+    margin: 0 0 0.75rem;
+    font-family: var(--display);
+  }
+  .card p {
+    margin: 0;
+    color: var(--text-muted);
+  }
+</style>

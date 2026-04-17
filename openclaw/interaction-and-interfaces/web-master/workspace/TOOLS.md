@@ -254,121 +254,120 @@ You **can** read it to look up routes, port, and deploy scripts. Don't write.
 
 ---
 
-# Authentication (optional)
+# Modules
 
-**When to use this:** the user asks for a login, a password-protected page, admin-only reports, or any gated content. Public marketing sites don't need it — don't install proactively.
+The vanilla template ships a working example of each module so users can see what's possible and you have a working reference. When the user tells you what kind of site they want, **delete the modules they don't need** — don't ask them to install missing ones. Their docs stay here if they want to re-add later.
 
-**What to use:** [Better Auth](https://better-auth.com/docs/integrations/astro). It's the current standard for Astro (Lucia was deprecated in 2025), TypeScript-first, plays with our existing SQLite DB, and has first-class Astro integration including middleware.
+## Authentication Module
 
-**What NOT to do:**
-- Query param tokens (`?token=abc`). They leak via browser history, referrers, server logs, CDN logs.
-- Tokens or secrets printed on the page. Ever.
-- Rolling your own password hashing. Let Better Auth handle it (scrypt, timing-safe comparisons, HttpOnly/Secure/SameSite cookies).
+**Status:** built-in. Uses [Better Auth](https://better-auth.com/docs/integrations/astro) — the current standard for Astro (Lucia was deprecated in 2025), TypeScript-first, SQLite-backed via our existing `data/database.db`.
 
-## Install
+**Files:**
+
+| File | Purpose |
+|---|---|
+| `src/lib/auth.ts` | Auth instance. Reads `trustedOrigins` from env. |
+| `src/pages/api/auth/[...all].ts` | Catch-all handler for all Better Auth endpoints |
+| `src/middleware.ts` | Populates `Astro.locals.user` and `Astro.locals.session` on every request |
+| `src/env.d.ts` | Types for `App.Locals` |
+| `src/pages/login.astro` | Vanilla sign-in form (POST fallback + JS fetch) |
+| `src/pages/reports.astro` | Example gated page — redirects anon users to `/app/login` |
+| `scripts/create-test-user.mjs` | Seed a user without booting the server: `node --env-file=.env scripts/create-test-user.mjs <email> <password>` |
+
+The Layout nav reads `Astro.locals.user` and shows "Sign in" or "Sign out" conditionally, plus a "Reports" link.
+
+**Env vars** — see `.env.example` in the astro-app root for the canonical list.
+
+| Var | Required | Purpose |
+|---|---|---|
+| `BETTER_AUTH_SECRET` | yes | Signs session cookies. Generate with `openssl rand -base64 32`. Fresh per deployment. |
+| `BETTER_AUTH_URL` | yes | Public URL (including `/app`) the user hits in the browser. Must match origin exactly. |
+| `BETTER_AUTH_TRUSTED_ORIGINS` | no | Comma-separated extras if the site is reachable under multiple hosts. |
+
+`BETTER_AUTH_URL` must match the origin the user hits in the browser. The `trustedOrigins` list in `auth.ts` is derived from these env vars.
+
+### Local development
+
+Copy `.env.example` to `.env`, fill in values, keep `.env` gitignored. Already done if you're iterating on the local template.
+
+### Deployed on Pinata managed
+
+`.env` files are **not** used in production. The platform injects env vars into the process. The agent cannot set these itself — **ask the human to configure them** through the Pinata platform UI/API when the site first deploys (or before anyone tries to log in).
+
+What to tell the user:
+
+> "The auth module needs two environment variables set on the platform before anyone can sign in:
+> - `BETTER_AUTH_SECRET` — I'll generate one for you: `<paste: openssl rand -base64 32>`
+> - `BETTER_AUTH_URL` — your site's public URL including `/app` (e.g. `https://<agent-id>.agents.pinata.cloud/app`)
+>
+> Set these through the Pinata platform, then restart the agent so the server picks them up."
+
+If you see `BETTER_AUTH_SECRET` errors in logs or sign-in/sign-up returning 500s, the env vars are missing or out of sync with the site's actual URL — walk the user through the list above.
+
+**First-time setup on fresh deployment:**
 
 ```bash
 cd workspace/projects/astro-app
-npm install better-auth
+npx @better-auth/cli@latest migrate   # creates user/session/account/verification tables
 ```
 
-Add to `.env` (and make sure `.env` is gitignored):
+Run this once per deployment (or after any `better-auth` upgrade that changes schema).
 
-```
-BETTER_AUTH_SECRET=<run: openssl rand -base64 32>
-BETTER_AUTH_URL=<your agent's public URL>/app
-```
-
-## Wire It Up
-
-**1. Create `src/lib/auth.ts`:**
-
-```ts
-import { betterAuth } from "better-auth";
-import Database from "better-sqlite3";
-import { join } from "path";
-
-export const auth = betterAuth({
-  database: new Database(join(process.cwd(), "data", "database.db")),
-  emailAndPassword: { enabled: true },
-  basePath: "/app/api/auth",
-});
-```
-
-**2. Generate the auth tables:**
-
-```bash
-cd workspace/projects/astro-app && npx @better-auth/cli@latest migrate
-```
-
-This creates the `user`, `session`, `account`, `verification` tables in `data/database.db`. Re-run after upgrading Better Auth.
-
-**3. Mount the catch-all API route at `src/pages/api/auth/[...all].ts`:**
-
-```ts
-import type { APIRoute } from "astro";
-import { auth } from "../../../lib/auth";
-
-export const ALL: APIRoute = async (ctx) => auth.handler(ctx.request);
-```
-
-**4. Middleware at `src/middleware.ts` — populates `Astro.locals` with user/session on every request:**
-
-```ts
-import { defineMiddleware } from "astro:middleware";
-import { auth } from "./lib/auth";
-
-export const onRequest = defineMiddleware(async (ctx, next) => {
-  const result = await auth.api.getSession({ headers: ctx.request.headers });
-  ctx.locals.user = result?.user ?? null;
-  ctx.locals.session = result?.session ?? null;
-  return next();
-});
-```
-
-Add to `src/env.d.ts`:
-
-```ts
-declare namespace App {
-  interface Locals {
-    user: import("better-auth").User | null;
-    session: import("better-auth").Session | null;
-  }
-}
-```
-
-**5. Gate a page — redirect anonymous visitors:**
+### Gating a page
 
 ```astro
 ---
-if (!Astro.locals.user) return Astro.redirect("/app/login");
+const base = import.meta.env.BASE_URL;
+if (!Astro.locals.user) return Astro.redirect(`${base}/login`);
 ---
-<h1>Secret report</h1>
 ```
 
-**6. Client-side sign-in / sign-up:** create `src/lib/auth-client.ts`:
+### Critical rules (ship-breakers)
+
+- **`<form method="post">` on any form with a password or secret** — always. Never rely on JS `onsubmit` + `preventDefault()` alone. If JS fails for any reason, a form defaults to GET and puts the password in the URL. Also set a safe `action`.
+- **No auth tokens or secrets in URLs.** Ever. Better Auth uses HttpOnly cookies by default — keep it that way.
+- **No secrets printed on pages.** Not session IDs, not tokens, not passwords, not debug dumps.
+- **`BETTER_AUTH_SECRET`** is fresh per deployment. Never commit or share one.
+- **`.env` is gitignored** — keep it that way.
+- **Rebuild + restart** after changing auth config; the running server won't pick up changes.
+- **Better Auth sign-out endpoint wants JSON:** `fetch("/app/api/auth/sign-out", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" })`. Empty body with `Content-Type: application/json` → 500. Body must at least be `"{}"`.
+
+### Create a user without a server
+
+The agent usually owns the site, so creating the initial user is an agent task — use the seed script (doesn't boot a server, uses Better Auth's server API directly):
+
+```bash
+node --env-file=.env scripts/create-test-user.mjs alice@example.com s0mething-strong
+```
+
+Share the credentials in chat once. Tell the user to change their password on first login.
+
+### Client-side (if you need a signup page, not just login)
 
 ```ts
+// src/lib/auth-client.ts
 import { createAuthClient } from "better-auth/client";
 export const authClient = createAuthClient({ baseURL: "/app/api/auth" });
 ```
 
-Use `authClient.signIn.email({ email, password })` and `authClient.signUp.email(...)` in your login/signup forms.
+Then `authClient.signIn.email({ email, password })` / `authClient.signUp.email(...)`.
 
-## Rules
+### Plugins worth knowing
 
-- **`.env` is gitignored** and never checked into the repo.
-- **`BETTER_AUTH_SECRET`** must be a fresh random value per deployment — never commit or share one.
-- **Rebuild and restart** after adding or changing auth config — the running server won't pick up changes.
-- **No tokens in URLs.** Better Auth uses HttpOnly cookies by default; keep it that way.
-- **Never print secrets on the page.** Not session IDs, not tokens, not passwords.
-- **One user, single-owner site?** Create their account via the signup flow yourself, share the credentials in chat once, tell them to change the password on first login.
-- **Rate limit** if the site is public-facing — Better Auth has built-in rate limiting; enable it in the config.
-
-## Plugins Worth Knowing
-
-- **Magic links** — email-free variant: agent generates the link, shares it in chat, no SMTP needed.
+- **Magic links** — agent generates the link, shares it in chat, no SMTP needed.
 - **Passkeys** — WebAuthn, no passwords at all.
 - **Two-factor** — TOTP on top of password.
+- **Rate limiting** — built-in, enable in the config for public-facing sites.
 
 Docs: https://better-auth.com/docs
+
+### Removing the auth module
+
+When the user wants a site with no auth (most marketing sites), delete:
+
+```
+rm -rf src/lib/auth.ts src/middleware.ts src/pages/api/auth src/pages/login.astro src/pages/reports.astro scripts/create-test-user.mjs
+npm uninstall better-auth
+```
+
+Also remove `env.d.ts`'s `App.Locals` block (or delete the file if nothing else uses it), strip the Reports link + sign-in/out toggle from `src/layouts/Layout.astro`, and drop `BETTER_AUTH_*` env vars from `.env`. Auth tables in `data/database.db` can stay — they're inert if nothing calls them.
