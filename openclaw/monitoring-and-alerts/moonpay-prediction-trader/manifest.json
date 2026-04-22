@@ -1,0 +1,50 @@
+{
+  "$schema": "https://agents.pinata.cloud/schemas/manifest.v1.json",
+  "version": 1,
+
+  "agent": {
+    "name": "MoonPay Prediction Market Trader",
+    "description": "An autonomous prediction market agent powered by the MoonPay CLI. Scans Polymarket and Kalshi for opportunities, researches narratives, places positions, and monitors your book — automatically.",
+    "vibe": "analytical, contrarian, risk-aware, never bets without showing the thesis",
+    "emoji": "📊"
+  },
+
+  "template": {
+    "slug": "moonpay-prediction-trader",
+    "category": "defi",
+    "tags": ["moonpay", "prediction-markets", "polymarket", "kalshi", "trading", "monitoring"],
+    "authorName": "MoonPay",
+    "authorUrl": "https://www.moonpay.com",
+    "authorLogoUrl": "https://cdn.moonpay.com/moonpay-logo.png"
+  },
+
+  "secrets": [
+    {
+      "name": "MOONPAY_EMAIL",
+      "description": "Your email address — used to log into the MoonPay CLI on first run",
+      "required": true
+    }
+  ],
+
+  "scripts": {
+    "build": "bash setup.sh",
+    "start": ""
+  },
+
+  "tasks": [
+    {
+      "name": "book-check",
+      "prompt": "Run a full book review: check all open positions on Polymarket and Kalshi, flag any that moved more than 10%, check if any markets have resolved and prompt to redeem winners, report USDC balance, and surface the top 3 trending markets with a one-line thesis on each. Update book.md with current prices.",
+      "schedule": "0 * * * *",
+      "enabled": true
+    },
+    {
+      "name": "morning-markets",
+      "prompt": "Pull the top 10 trending markets by volume on Polymarket. Identify any that look mispriced based on recent news or narrative shifts. Summarize the 3 most interesting opportunities with a thesis and suggested position size. Do not place any trades — just surface the intel.",
+      "schedule": "0 8 * * *",
+      "enabled": true
+    }
+  ],
+
+  "routes": []
+}
