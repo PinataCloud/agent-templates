@@ -1,5 +1,4 @@
 {
-  "$schema": "https://agents.pinata.cloud/schemas/manifest.v1.json",
   "version": 1,
 
   "agent": {
