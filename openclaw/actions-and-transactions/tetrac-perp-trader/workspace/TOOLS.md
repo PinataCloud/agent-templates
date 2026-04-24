@@ -15,7 +15,8 @@
 | Group | What it does |
 |-------|-------------|
 | `skill-trading status` | Pre-flight: TTC Box API + session + exchange credentials → READY / NOT READY |
-| `skill-trading register / login` | Auth — register auto-generates email + passkey and writes .env |
+| `skill-trading register` | First-run only — auto-generates email + passkey, creates SVM + EVM wallets client-side, writes session + credentials to `.env`. Never run on an account that already has `TTC_EMAIL` / `TTC_PASSKEY` in `.env`. |
+| `skill-trading login` | **Run every 24 hours** — session tokens expire 24h after issue. Reads `TTC_EMAIL` + `TTC_PASSKEY` from `.env`, fetches a fresh `TTC_AUTH_TOKEN`, and updates `TTC_TOKEN_ISSUED_AT` (the session duration timestamp). Never touches wallets, passkey, or exchange keys. |
 | `skill-trading order` | limit, market, stop, take-profit, dca, open, cancel, cancel-all |
 | `skill-trading position` | get, pnl, close, close-all |
 | `skill-trading account` | balance, leverage, margin, hedge |
@@ -47,7 +48,7 @@
 **TTC session** — written automatically by `register` / `login`:
 - `TTC_AUTH_TOKEN`, `TTC_PUBLIC_KEY`, `TTC_EMAIL`, `TTC_PASSKEY`, `TTC_TOKEN_ISSUED_AT`, `TTC_EXCHANGE`
 
-**Exchange credentials** — added during onboarding (names vary by exchange, see `openclaw/skill-onboarding/SKILL.md`):
+**Exchange credentials** — added during onboarding (names vary by exchange, see `skills/skill-onboarding/SKILL.md`):
 - `<EXCHANGE>_API_KEY`
 - `<EXCHANGE>_API_SECRET`
 - `<EXCHANGE>_API_PASSPHRASE` (Orderly, OKX, KuCoin, Bitget, BloFin)
@@ -57,11 +58,11 @@
 
 ## Supported Exchanges
 
-`orderly`, `phemex`, `bybit`, `binance`, `okx`, `bitget`, `blofin`, `kucoin`, `hyperliquid`, `asterdex`, `bingx`, and more. See `openclaw/skill-onboarding/SKILL.md` for the authoritative list.
+`orderly`, `phemex`, `bybit`, `binance`, `okx`, `bitget`, `blofin`, `kucoin`, `hyperliquid`, `asterdex`, `bingx`, and more. See `skills/skill-onboarding/SKILL.md` for the authoritative list.
 
 ## Skills Location
 
-After build: `openclaw/<skill-name>/SKILL.md` at the repo root (one folder per skill, each self-contained with references and examples).
+After build: `skills/<skill-name>/SKILL.md` at the repo root (one folder per skill, each self-contained with references and examples).
 
 ## Session Token Lifetime
 

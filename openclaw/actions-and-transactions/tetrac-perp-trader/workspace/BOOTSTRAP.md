@@ -17,22 +17,24 @@ Then ask:
 
 Run `skill-trading status`. This checks three things concurrently:
 - TTC Box API reachable
-- Session token valid (24h window)
+- Session token valid (24h window — tokens expire 24h after issue)
 - At least one exchange configured
 
-**If session is missing or expired** — go to Auth below.
-**If no exchange is configured** — go to Exchange credentials below.
-**If it returns `READY`** — skip to First look.
+Decide based on what fails:
+- **No `TTC_EMAIL` / `TTC_PASSKEY` in `.env`** (brand-new deploy) → go to **Register (first run only)**.
+- **Token expired but `TTC_EMAIL` + `TTC_PASSKEY` are in `.env`** → go to **Login (24h refresh)**.
+- **No exchange configured** → go to **Exchange credentials**.
+- **`READY`** → skip to **First look**.
 
-## Auth (register or login)
+## Register (first run only)
 
-For a brand-new user, run:
+For a brand-new user with no existing Tetrac account, run:
 
 ```bash
 skill-trading register
 ```
 
-The CLI auto-generates a random email + 64-char hex passkey, creates four encrypted wallets (Solana, Orderly, EVM main, EVM signing), and writes these values to `.env`:
+The CLI auto-generates a random email + 64-char hex passkey, generates four wallets **client-side** (Solana / SVM, Orderly, EVM main, EVM signing), encrypts their private keys with a key derived from the passkey, and writes these values to `.env`:
 - `TTC_EMAIL`
 - `TTC_PASSKEY`
 - `TTC_AUTH_TOKEN`
@@ -41,9 +43,23 @@ The CLI auto-generates a random email + 64-char hex passkey, creates four encryp
 
 **Immediately surface the passkey to the user.** Tell them:
 
-> "This is your Tetrac passkey: `<passkey>`. Save it somewhere safe right now. It encrypts your generated wallets — losing it means losing access to them. If you want a custom email instead of the auto-generated one, I can re-run register with `--email <your@email>`."
+> "This is your Tetrac passkey: `<passkey>`. Save it somewhere safe right now. It encrypts your generated SVM and EVM wallets — losing it means losing access to them. If you want a custom email instead of the auto-generated one, I can re-run register with `--email <your@email>`."
 
-If the user already has TTC credentials, they can paste `TTC_EMAIL` + `TTC_PASSKEY` and we'll `skill-trading login` instead.
+**Never run `register` on a user who already has credentials in `.env`.** That would mint a fresh account and orphan the existing wallets. If the user tells you they already have a Tetrac account, ask them to paste `TTC_EMAIL` + `TTC_PASSKEY`, then use **Login** instead.
+
+## Login (24h refresh)
+
+When the existing session token is expired, close to expiry, or the user already has TTC credentials:
+
+```bash
+skill-trading login
+```
+
+- `login` reads `TTC_EMAIL` and `TTC_PASSKEY` from `.env` automatically — no prompts required if both are present.
+- It refreshes `TTC_AUTH_TOKEN` and `TTC_TOKEN_ISSUED_AT` — valid for the next 24 hours.
+- It never touches wallets, the passkey, or exchange API keys.
+
+If `login` fails because `TTC_EMAIL` or `TTC_PASSKEY` is missing from `.env`, ask the user to paste them and write to `.env` before retrying. Do **not** run `register` to "fix" this.
 
 ## Exchange selection
 
@@ -63,7 +79,7 @@ Ask the user which exchange to trade on. Once they pick, tell them what credenti
 | asterdex | `ASTERDEX_API_KEY`, `ASTERDEX_API_SECRET` |
 | bingx | `BINGX_API_KEY`, `BINGX_API_SECRET` |
 
-Refer to `openclaw/skill-onboarding/SKILL.md` for the authoritative list if the user asks about one not above.
+Refer to `skills/skill-onboarding/SKILL.md` for the authoritative list if the user asks about one not above.
 
 Collect the values from the user in chat. Then append them to `.env` (create the file if missing, never overwrite existing lines). Also set:
 

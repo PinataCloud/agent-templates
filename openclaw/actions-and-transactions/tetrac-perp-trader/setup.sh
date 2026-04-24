@@ -59,16 +59,16 @@ fi
 "$SKILL_TRADING_BIN" info
 echo "skill-trading CLI ready at $SKILL_TRADING_BIN"
 
-# ── Install skills into ./openclaw ────────────────────────────────────────────
-mkdir -p openclaw
+# ── Install skills into ./skills ──────────────────────────────────────────────
+mkdir -p skills
 for skill in "${SKILLS[@]}"; do
   SRC="$CLONE_DIR/.claude/skills/$skill"
   if [ ! -d "$SRC" ]; then
     echo "WARNING: skill not found in repo: $skill"
     continue
   fi
-  rm -rf "openclaw/$skill"
-  cp -r "$SRC" "openclaw/$skill"
+  rm -rf "skills/$skill"
+  cp -r "$SRC" "skills/$skill"
   echo "  installed $skill"
 done
 

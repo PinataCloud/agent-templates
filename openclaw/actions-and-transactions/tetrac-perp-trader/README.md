@@ -62,6 +62,10 @@ None at deploy time. All credentials are collected in chat and written to `.env`
 
 `orderly`, `phemex`, `bybit`, `binance`, `okx`, `bitget`, `blofin`, `kucoin`, `hyperliquid`, `asterdex`, `bingx` — and more. Some exchanges require a passphrase (Orderly, OKX, KuCoin, Bitget, BloFin).
 
+## Model
+
+Defaults to `deepseek/deepseek-v4-flash` (fast and cheap, good for routine status checks and straightforward orders). Swap to `anthropic/claude-sonnet-4-6` or `anthropic/claude-opus-4-7` in `manifest.json` under `model.primary` if you want stronger reasoning for scanner interpretation, multi-step risk decisions, or TWAP loop orchestration.
+
 ## Powered by
 
 - [Tetrac skill-trading CLI](https://gitlab.com/tradingtoolcrypto/rust-cli-ttc-api) — Rust binary, 11 installable skills

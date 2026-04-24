@@ -15,7 +15,7 @@ When idle, verify the session is healthy and update `MEMORY.md` with anything wo
 Run, in order:
 
 1. `skill-trading status` — session still valid? If token has < 1h remaining, offer to run `login` proactively.
-2. `skill-trading portfolio summary -e $TTC_EXCHANGE` — follow `openclaw/skill-portfolio-manager/SKILL.md`:
+2. `skill-trading portfolio summary -e $TTC_EXCHANGE` — follow `skills/skill-portfolio-manager/SKILL.md`:
    - `HEALTHY` → log one line to MEMORY.md (utilization + open position count) and stay quiet
    - `WATCH` → surface the specific warnings, suggest freeing margin
    - `DANGER` → alert the user immediately with at-risk position and recommended actions

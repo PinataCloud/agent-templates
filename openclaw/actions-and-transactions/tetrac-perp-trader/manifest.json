@@ -6,12 +6,16 @@
     "name": "Tetrac Perp Trader",
     "description": "A perpetual futures trading agent powered by the Tetrac skill-trading CLI. Scan 15+ exchanges, place and manage orders, monitor portfolio health, build TWAP and DCA ladders, and react to signals — all from chat.",
     "vibe": "sharp, data-driven, pre-flight checklists before every order, surfaces risk before the user has to ask",
-    "emoji": "chartUp"
+    "emoji": "📈"
+  },
+
+  "model": {
+    "primary": "deepseek/deepseek-v4-flash"
   },
 
   "template": {
     "slug": "tetrac-perp-trader",
-    "category": "actions-and-transactions",
+    "category": "actions & transactions",
     "tags": ["tetrac", "ttc-box", "perp", "futures", "trading", "orderly", "phemex", "bybit", "binance", "okx", "hyperliquid"],
     "authorName": "Tetrac",
     "authorUrl": "https://ttc.box",
@@ -28,13 +32,13 @@
   "tasks": [
     {
       "name": "morning-brief",
-      "prompt": "Run the morning brief. Follow openclaw/skill-market-overview/SKILL.md end-to-end: BTC/ETH regime on 4h + 1h, funding sentiment, open-interest leaders, top movers. Then run `skill-trading portfolio summary -e $TTC_EXCHANGE` per openclaw/skill-portfolio-manager/SKILL.md and report STATUS (HEALTHY / WATCH / DANGER) with any warnings surfaced verbatim. Write the briefing to MEMORY.md.",
+      "prompt": "Run the morning brief. Follow skills/skill-market-overview/SKILL.md end-to-end: BTC/ETH regime on 4h + 1h, funding sentiment, open-interest leaders, top movers. Then run `skill-trading portfolio summary -e $TTC_EXCHANGE` per skills/skill-portfolio-manager/SKILL.md and report STATUS (HEALTHY / WATCH / DANGER) with any warnings surfaced verbatim. Write the briefing to MEMORY.md.",
       "schedule": "0 9 * * *",
       "enabled": true
     },
     {
       "name": "portfolio-health-check",
-      "prompt": "Run `skill-trading portfolio summary -e $TTC_EXCHANGE` per openclaw/skill-portfolio-manager/SKILL.md. If STATUS is DANGER, alert the user immediately with the at-risk position and recommended actions (stop, close, or reduce). If WATCH, surface the warnings and suggest freeing margin. If HEALTHY, log a one-line entry to MEMORY.md and stay quiet.",
+      "prompt": "Run `skill-trading portfolio summary -e $TTC_EXCHANGE` per skills/skill-portfolio-manager/SKILL.md. If STATUS is DANGER, alert the user immediately with the at-risk position and recommended actions (stop, close, or reduce). If WATCH, surface the warnings and suggest freeing margin. If HEALTHY, log a one-line entry to MEMORY.md and stay quiet.",
       "schedule": "0 */4 * * *",
       "enabled": true
     }

@@ -17,10 +17,10 @@ workspace/
 
 ## Skills
 
-Skills are installed at build time by `setup.sh` — it clones `rust-cli-ttc-api` and copies eleven skill folders into `openclaw/`. Read the relevant `SKILL.md` before using a command group for the first time.
+Skills are installed at build time by `setup.sh` — it clones `rust-cli-ttc-api` and copies eleven skill folders into `skills/` at the repo root. Read the relevant `SKILL.md` before using a command group for the first time.
 
 ```
-openclaw/
+skills/
   skill-onboarding/SKILL.md         # First-run auth + exchange setup
   skill-trading/SKILL.md            # Core safe-trading protocol (always follow)
   skill-portfolio-manager/SKILL.md  # HEALTHY / WATCH / DANGER decision tree
@@ -36,7 +36,7 @@ openclaw/
 
 ## Workflow
 
-1. Build runs `setup.sh` — installs the `skill-trading` binary to `$HOME/.skill-trading/bin/skill-trading` and copies skills to `openclaw/`.
+1. Build runs `setup.sh` — installs the `skill-trading` binary to `$HOME/.skill-trading/bin/skill-trading` and copies skills to `skills/` at the repo root.
 2. The agent operates via conversation — no web server.
 3. All order, risk, and position mutations require explicit user confirmation before execution.
 4. `skill-trading status` gates every trading session. `skill-trading portfolio summary` gates every new position.
