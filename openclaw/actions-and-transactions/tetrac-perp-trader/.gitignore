@@ -1,0 +1,7 @@
+.env
+*.env
+config.toml
+workspace/memory/
+workspace/MEMORY.md
+skills/
+.skill-trading/
