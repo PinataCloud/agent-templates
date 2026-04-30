@@ -23,14 +23,21 @@ const { user } = Astro.locals;
 
 <script>
   const base = import.meta.env.BASE_URL;
-  document.getElementById("reports-signout")?.addEventListener("click", async () => {
-    await fetch(`${base}/api/auth/sign-out`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: "{}",
+  function bindReportsSignout() {
+    const btn = document.getElementById("reports-signout");
+    if (!btn || (btn as HTMLElement).dataset.bound) return;
+    (btn as HTMLElement).dataset.bound = "true";
+    btn.addEventListener("click", async () => {
+      await fetch(`${base}/api/auth/sign-out`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "{}",
+      });
+      window.location.href = `${base}/login`;
     });
-    window.location.href = `${base}/login`;
-  });
+  }
+  bindReportsSignout();
+  document.addEventListener("astro:page-load", bindReportsSignout);
 </script>
 
 <style>

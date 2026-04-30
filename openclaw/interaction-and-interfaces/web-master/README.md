@@ -11,7 +11,6 @@ This isn't a blank canvas. Web Master ships with a full toolkit so it can build 
 - Instantly swap to 60+ other brand designs (Stripe, Vercel, Linear, Apple, Nike, Notion...) via `npx getdesign` from [VoltAgent's awesome-design-md](https://github.com/VoltAgent/awesome-design-md)
 - CSS variables for every color, font, radius, and spacing value — change the design and the entire site transforms
 - Google Fonts (Space Grotesk + Inter) with easy font swapping via `--display` and `--sans` variables
-- Fade-up and fade-in animation keyframes for staggered reveals
 
 ### Three Layouts
 - **Layout** — Top nav with sticky blur. Best for landing pages, blogs, general sites.

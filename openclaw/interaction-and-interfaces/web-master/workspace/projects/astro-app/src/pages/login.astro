@@ -25,30 +25,35 @@ if (Astro.locals.user) return Astro.redirect(`${base}/reports`);
 
 <script>
   const base = import.meta.env.BASE_URL;
-  const form = document.getElementById("login-form");
-  const err = document.getElementById("err");
-
-  form?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!err) return;
-    err.hidden = true;
-    const fd = new FormData(form as HTMLFormElement);
-    const res = await fetch(`${base}/api/auth/sign-in/email`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: fd.get("email"),
-        password: fd.get("password"),
-      }),
+  function bindLogin() {
+    const form = document.getElementById("login-form");
+    const err = document.getElementById("err");
+    if (!form || (form as HTMLElement).dataset.bound) return;
+    (form as HTMLElement).dataset.bound = "true";
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!err) return;
+      err.hidden = true;
+      const fd = new FormData(form as HTMLFormElement);
+      const res = await fetch(`${base}/api/auth/sign-in/email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: fd.get("email"),
+          password: fd.get("password"),
+        }),
+      });
+      if (res.ok) {
+        window.location.href = `${base}/reports`;
+      } else {
+        const data = await res.json().catch(() => ({}));
+        err.textContent = data.message || "Invalid email or password";
+        err.hidden = false;
+      }
     });
-    if (res.ok) {
-      window.location.href = `${base}/reports`;
-    } else {
-      const data = await res.json().catch(() => ({}));
-      err.textContent = data.message || "Invalid email or password";
-      err.hidden = false;
-    }
-  });
+  }
+  bindLogin();
+  document.addEventListener("astro:page-load", bindLogin);
 </script>
 
 <style>

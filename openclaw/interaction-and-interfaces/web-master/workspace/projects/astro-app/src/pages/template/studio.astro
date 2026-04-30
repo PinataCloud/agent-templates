@@ -80,8 +80,8 @@ const services = [
     <div class="inner">
       <h2 class="section-label">What We Do</h2>
       <div class="service-list">
-        {services.map((s, i) => (
-          <div class="service" style={`animation-delay: ${0.1 + i * 0.15}s`}>
+        {services.map((s) => (
+          <div class="service">
             <div class="service-content">
               <div class="service-header">
                 <span class="service-num">{s.num}</span>
@@ -151,7 +151,6 @@ const services = [
     align-items: center;
     max-width: var(--max-w);
     margin: 0 auto;
-    animation: fade-in 0.8s ease both;
   }
 
   .hero-visual {
@@ -266,7 +265,6 @@ const services = [
     grid-template-columns: 1fr 300px;
     gap: 2rem;
     align-items: center;
-    animation: fade-up 0.5s ease both;
   }
 
   .service-content {
@@ -358,7 +356,6 @@ const services = [
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    animation: fade-in 0.6s ease both;
   }
 
   .contact-title {

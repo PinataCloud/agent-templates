@@ -54,14 +54,21 @@ const navLinks = links ?? [
 
     <script>
       const base = import.meta.env.BASE_URL;
-      document.getElementById("signout-btn")?.addEventListener("click", async () => {
-        await fetch(`${base}/api/auth/sign-out`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: "{}",
+      function bindSignout() {
+        const btn = document.getElementById("signout-btn");
+        if (!btn || (btn as HTMLElement).dataset.bound) return;
+        (btn as HTMLElement).dataset.bound = "true";
+        btn.addEventListener("click", async () => {
+          await fetch(`${base}/api/auth/sign-out`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: "{}",
+          });
+          window.location.href = base;
         });
-        window.location.href = base;
-      });
+      }
+      bindSignout();
+      document.addEventListener("astro:page-load", bindSignout);
     </script>
   </body>
 </html>

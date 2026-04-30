@@ -78,7 +78,7 @@ Dark-first, CSS variables in `src/styles/global.css`:
 - **Layout:** `--max-w`, `--radius`
 - **Theme:** light/dark via `prefers-color-scheme`. Use `color-mix()` for transparent variants.
 
-Global keyframes `fade-up` and `fade-in` are available for staggered reveals.
+**No page-load entrance animations.** Don't add `fade-up` / `fade-in` keyframes that start at `opacity: 0` and rely on first-render to animate to visible. They break under Astro's `<ClientRouter />` — back/forward navigation doesn't replay CSS animations, so content stays invisible. If you want motion, use hover transitions or looping decorative animations only.
 
 ## UI Component Library
 
@@ -195,7 +195,6 @@ Every page: `title`, `description`, `image` props to `BaseHead`. It generates Op
 ### Details That Matter
 - Hover states on everything interactive — cards lift (`translateY(-4px)`), borders glow.
 - Transitions on transform/color/box-shadow (0.15s–0.2s).
-- Fade-up animations on page load with `animation-delay` stagger.
 - Sticky nav with `backdrop-filter: blur()` + semi-transparent via `color-mix()`.
 - `--radius` everywhere.
 - Focus ring: `box-shadow: 0 0 0 3px var(--accent-glow)`.
@@ -252,6 +251,7 @@ You **can** read it to look up routes, port, and deploy scripts. Don't write.
 - **SQLite string literals:** single quotes in SQL (`WHERE status = 'active'`). Double quotes are column identifiers in SQLite → "no such column" errors.
 - **Static files don't reach origin through the proxy:** files in `public/` build locally but the reverse proxy serves from CDN and blocks origin fallback. Any image not cached returns 404 externally. For user-uploaded images, use the `/api/img/[file].ts` SSR route (`/app/api/img/filename.jpg`). Stock images should use IPFS URLs.
 - **Astro 6 Content Layer:** use `post.id`, not `post.slug`. The `slug` property doesn't exist in Astro 6 with the `glob()` loader.
+- **`<ClientRouter />` + inline `<script>` event handlers don't survive SPA navigation.** A plain `<script>` runs once on initial load, attaches a listener, then never re-runs as the user navigates SPA-style — so the new DOM's button has no handler, and clicks do nothing until a hard reload happens. Symptom: "I had to click sign-out many times." Fix: wrap the binding in a function and call it from both initial load AND `astro:page-load`. Guard with `dataset.bound` so re-attachment doesn't double-fire. Pattern: `function bind() { const el = document.getElementById('x'); if (!el || el.dataset.bound) return; el.dataset.bound = 'true'; el.addEventListener(...); } bind(); document.addEventListener('astro:page-load', bind);`
 
 ---
 
@@ -262,6 +262,39 @@ The vanilla template ships a working example of each module so users can see wha
 ## Authentication Module
 
 **Status:** built-in but **off by default**. The vanilla template ships it wired up so you have a working reference, but you should **remove it unless the use case clearly needs login**. Uses [Better Auth](https://better-auth.com/docs/integrations/astro) — the current standard for Astro (Lucia was deprecated in 2025), TypeScript-first, SQLite-backed via our existing `data/database.db`.
+
+### One rule: Better Auth or nothing
+
+When a site needs auth, the answer is **always Better Auth**. There is no second option. Do not invent one.
+
+**Specifically do not, ever:**
+- Add a `SITE_PASSWORD` (or any single-secret) env var and check it in a page.
+- Gate content with a client-side `localStorage` flag, a CSS `visibility: hidden` overlay, or any JS that "hides" content the server already rendered. The HTML still ships; anyone with devtools or `curl` reads it.
+- Write a custom middleware that compares a token in a cookie/header to an env var.
+- Replace, "simplify," or work around `src/lib/auth.ts` and `src/middleware.ts`. They are the auth.
+
+If Better Auth feels heavy for the use case, the answer is **the shared-login pattern below**, not a rewrite. Better Auth gives you HttpOnly cookies, server-side session checks, and proper sign-out. Anything you write yourself in an afternoon will leak content, be trivially bypassable, or both — and we have shipped agents that proved this.
+
+If the user pushes back on Better Auth's complexity, push back on yours: explain that the gating is one line (`if (!Astro.locals.user) return Astro.redirect(...)`), and that "just a password" *is* one Better Auth user the whole team shares. See the next section.
+
+### Shared single login (the simple path)
+
+When the user says *"I just want one password,"* *"only my team needs in,"* *"no signup, just a login,"* — they don't need a second auth system. They need **one Better Auth user that everyone shares**.
+
+**The pattern:**
+1. Keep Better Auth wired up (don't remove the module).
+2. Disable the public sign-up page if you have one (the template doesn't ship one — only `login.astro`).
+3. Create a single account whose email represents the team, e.g. `team@<their-domain>` or `employee@<their-company>.com`:
+   ```bash
+   cd workspace/projects/astro-app
+   node --env-file=.env scripts/create-test-user.mjs team@acme.com s0me-strong-shared-password
+   ```
+4. Share the credentials with the user once, in chat. Tell them anyone on their team uses the same email + password to sign in.
+5. Done. Every gated page works the same way: `if (!Astro.locals.user) return Astro.redirect(...)`.
+
+This solves the "I just want one shared password" case **without** a second auth path, custom env vars, or client-side gates. It's the same Better Auth code, with one row in the user table.
+
+If they later want per-user accounts, you add `signUp` or seed more users — no rewrite.
 
 ### When to keep this module
 
@@ -278,10 +311,11 @@ The vanilla template ships a working example of each module so users can see wha
 - Forms submit to external services (Formspree, email, webhook) without persisting per-visitor state.
 
 **Ask before deciding when the ask is ambiguous:**
-- *"I want to share my monthly sales in a website"* → who sees it? Owner-only / investors / public? If private → keep auth. If public → remove.
-- *"I want a store"* → do customers need "my orders" / "my account"? If yes → keep. If Stripe checkout + email receipts is enough → remove.
+- *"I want to share my monthly sales in a website"* → who sees it? Owner-only / investors / public? If private → keep auth (shared login is fine). If public → remove.
+- *"I want a store"* → do customers need "my orders" / "my account"? If yes → keep, per-user. If Stripe checkout + email receipts is enough → remove.
 - *"A contact form"* → does anything persist on the site, or does it just email/Telegram the owner? Persist → maybe keep. Just forward → remove.
-- Anything that mentions *"keep my users' information"*, *"track who did what"*, *"only logged-in people"* → keep.
+- Anything that mentions *"keep my users' information"*, *"track who did what"*, *"only logged-in people"* → keep, per-user.
+- *"I just want one password,"* *"only my team needs to get in"* → keep auth, use the **shared single login** pattern above. Don't remove auth, don't roll your own.
 
 **Concrete examples:**
 
@@ -289,10 +323,11 @@ The vanilla template ships a working example of each module so users can see wha
 |---|---|
 | "A store I control fully from Telegram plus a contact form" | Remove auth |
 | "A blog about hiking" | Remove auth |
-| "An internal dashboard for my team's monthly numbers" | Keep auth |
-| "A site where customers can track their orders" | Keep auth (customer accounts) |
+| "An internal dashboard for my team's monthly numbers" | Keep auth, **shared login** |
+| "A site where customers can track their orders" | Keep auth, per-user accounts |
 | "A portfolio" | Remove auth |
 | "A place where my staff submits reports" | Keep auth (see *Advanced* below) |
+| "I just want one password for my team" | Keep auth, **shared login** |
 
 ### Advanced: admin vs user roles
 

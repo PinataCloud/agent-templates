@@ -26,17 +26,17 @@ const base = import.meta.env.BASE_URL;
 
   <section class="features">
     <div class="features-inner">
-      <div class="feature-card" style="animation-delay: 0.1s">
+      <div class="feature-card">
         <span class="feature-num">01</span>
         <h3>Server-Rendered</h3>
         <p>Astro SSR delivers fast, dynamic pages with minimal client JavaScript. Every page loads instantly.</p>
       </div>
-      <div class="feature-card" style="animation-delay: 0.2s">
+      <div class="feature-card">
         <span class="feature-num">02</span>
         <h3>SQLite Storage</h3>
         <p>Embedded database for forms and data. No external services, no latency, no configuration.</p>
       </div>
-      <div class="feature-card" style="animation-delay: 0.3s">
+      <div class="feature-card">
         <span class="feature-num">03</span>
         <h3>Content Blog</h3>
         <p>Markdown and MDX files become blog posts with interactive components. Write content, not configuration.</p>
@@ -72,7 +72,6 @@ const base = import.meta.env.BASE_URL;
     flex-direction: column;
     align-items: center;
     gap: 1.25rem;
-    animation: fade-in 0.6s ease both;
   }
 
   .hero-title {
@@ -125,7 +124,6 @@ const base = import.meta.env.BASE_URL;
     flex-direction: column;
     gap: 0.75rem;
     transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    animation: fade-up 0.5s ease both;
   }
 
   .feature-card:hover {

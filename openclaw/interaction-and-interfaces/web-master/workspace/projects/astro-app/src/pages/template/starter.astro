@@ -58,8 +58,8 @@ const stats = [
       <h2 class="section-title">Everything you need</h2>
       <p class="section-sub">A complete toolkit for building modern websites. Nothing extra, nothing missing.</p>
       <div class="feature-grid">
-        {features.map((f, i) => (
-          <div class="feature-card" style={`animation-delay: ${0.1 + i * 0.08}s`}>
+        {features.map((f) => (
+          <div class="feature-card">
             <span class="feature-icon">{f.icon}</span>
             <h3>{f.title}</h3>
             <p>{f.desc}</p>
@@ -131,7 +131,6 @@ const stats = [
     gap: 3rem;
     align-items: center;
     text-align: left;
-    animation: fade-in 0.6s ease both;
   }
 
   .hero-content {
@@ -232,7 +231,6 @@ const stats = [
     flex-direction: column;
     gap: 0.6rem;
     transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    animation: fade-up 0.5s ease both;
   }
 
   .feature-card:hover {

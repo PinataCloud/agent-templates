@@ -37,8 +37,8 @@ const projects = [
   <section id="work" class="work">
     <h2 class="section-label">Selected Work</h2>
     <div class="project-grid">
-      {projects.map((p, i) => (
-        <div class="project-card" style={`animation-delay: ${0.1 + i * 0.08}s`}>
+      {projects.map((p) => (
+        <div class="project-card">
           <div class="project-thumb" style={`background-image: url(${p.image}); background-size: cover; background-position: center;`}>
           </div>
           <div class="project-info">
@@ -101,7 +101,6 @@ const projects = [
   .hero {
     padding: 2rem 0 3rem;
     border-bottom: 1px solid var(--border);
-    animation: fade-in 0.5s ease both;
   }
 
   .hero-greeting {
@@ -163,7 +162,6 @@ const projects = [
     border-radius: var(--radius);
     overflow: hidden;
     transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    animation: fade-up 0.5s ease both;
   }
 
   .project-card:hover {
