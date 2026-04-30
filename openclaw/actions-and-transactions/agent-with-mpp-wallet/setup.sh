@@ -21,7 +21,12 @@ if [ ! -f "$HOME/.tempo/bin/tempo" ]; then
     NEEDS_PATCH=1
     mkdir -p "$HOME/.tempo/glibc"
     curl -L -o /tmp/libc6.deb \
-      "http://ftp.debian.org/debian/pool/main/g/glibc/libc6_2.42-14_amd64.deb"
+      "https://snapshot.debian.org/archive/debian/20260419T203450Z/pool/main/g/glibc/libc6_2.42-15_amd64.deb"
+    # Validate the download is actually a .deb before proceeding
+    if ! dpkg-deb --info /tmp/libc6.deb > /dev/null 2>&1; then
+      echo "ERROR: libc6.deb download failed or is not a valid Debian archive"
+      exit 1
+    fi
     dpkg-deb -x /tmp/libc6.deb "$HOME/.tempo/glibc/"
     curl -L -o /tmp/patchelf.tar.gz \
       "https://github.com/NixOS/patchelf/releases/download/0.18.0/patchelf-0.18.0-x86_64.tar.gz"
