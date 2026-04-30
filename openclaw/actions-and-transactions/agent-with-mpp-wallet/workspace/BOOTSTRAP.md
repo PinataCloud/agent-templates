@@ -53,8 +53,8 @@ After the CLI is installed and introductions are done, set up the wallet:
 Then proceed to login.
 
 1. **Login:** Run `"$HOME/.tempo/bin/tempo" wallet login`
-   - This requires the user to complete a browser/passkey action. Tell them: *"I need you to complete a login step in your browser to set up the wallet. Let me know when you're done."*
-   - Use a long timeout (at least 16 minutes). Do not retry without user confirmation.
+   - Use a long timeout (at least 16 minutes) so the process backgrounds rather than times out.
+   - **Immediately after backgrounding**, poll the process log to capture the auth URL — it will look like `Auth URL: https://wallet.tempo.xyz/cli-auth?code=XXXXXXXX`. Send that link directly to the user; do not tell them to "check their browser" without providing it.
    - After login completes, Tempo auto-downloads a `tempo-wallet` sub-binary. If wallet commands fail immediately after, patch it:
      ```bash
      GLIBC="$HOME/.tempo/glibc/usr/lib/x86_64-linux-gnu"
