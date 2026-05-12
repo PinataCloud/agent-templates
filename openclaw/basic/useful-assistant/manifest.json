@@ -82,5 +82,12 @@
       "schedule": "0 9 * * *",
       "enabled": true
     }
+  ],
+
+  "skills": [
+    {
+      "cid": "bafybeicglyjdb6wrrcbfyu6i2fe4lpxdxgvfvlht7yzdim7cvwt656whue",
+      "name": "@pinata/platform"
+    }
   ]
 }
