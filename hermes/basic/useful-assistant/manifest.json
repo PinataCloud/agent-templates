@@ -14,11 +14,6 @@
     "tags": ["assistant", "personal", "productivity", "hermes"],
     "authorName": "Pinata"
   },
-  "secrets": [
-    {
-      "name": "ANTHROPIC_API_KEY"
-    }
-  ],
   "routes": [
     {
       "port": 5173,

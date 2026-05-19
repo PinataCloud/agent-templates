@@ -1,12 +1,11 @@
-# Ignore everything except workspace, skills, SOUL.md, AGENTS.md, manifest.json
+# Ignore everything except workspace, skills, manifest.json, README.md
 *
 !workspace/
 !workspace/**
 !skills/
 !skills/**
-!SOUL.md
-!AGENTS.md
 !manifest.json
+!README.md
 !.gitignore
 
 # Dependencies (re-ignore inside workspace/skills)
