@@ -1,0 +1,1 @@
+jq '.gateway.controlUi.allowedOrigins += ["*"]' /home/node/.openclaw/openclaw.json > /home/node/.openclaw/openclaw.json.tmp && mv /home/node/.openclaw/openclaw.json.tmp /home/node/.openclaw/openclaw.json && jq .gateway.controlUi.allowedOrigins /home/node/.openclaw/openclaw.json

@@ -1,0 +1,50 @@
+# Ignore everything except workspace, skills, SOUL.md, AGENTS.md, manifest.json
+*
+!workspace/
+!workspace/**
+!skills/
+!skills/**
+!SOUL.md
+!AGENTS.md
+!manifest.json
+!.gitignore
+
+# Dependencies (re-ignore inside workspace/skills)
+**/node_modules/
+**/bower_components/
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.venv/
+**/venv/
+**/.tox/
+
+# Build outputs
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+**/.output/
+**/.turbo/
+
+# Sensitive files and OS junk
+.DS_Store
+**/.DS_Store
+.env
+**/*.key
+**/*.pem
+**/secrets*
+
+# Editor/IDE
+**/.idea/
+**/.vscode/
+
+# Build artifacts and temp files
+**/*.log
+**/*.tmp
+**/*.bak
+**/*.bak.*
+**/.cache

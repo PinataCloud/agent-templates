@@ -19,6 +19,9 @@ Templates are organized by **agent type** — the underlying runtime or framewor
 ### [OpenClaw](./openclaw)
 OpenClaw agents run in isolated containers with a persistent workspace. They can run code, search the web, manage files, and connect to external services.
 
+### [Hermes](./hermes)
+Hermes agents (by Nous Research) run with a native workspace layout — `SOUL.md` for persona, `memories/MEMORY.md` for long-term memory, and an empty `workspace/` as cwd. Project context comes from auto-discovered files (`AGENTS.md`, `.hermes.md`, etc.) rather than a manifest.
+
 ---
 
 *More agent types coming soon.*

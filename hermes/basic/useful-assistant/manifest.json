@@ -1,0 +1,29 @@
+{
+  "$schema": "https://agents.pinata.cloud/schemas/manifest.v1.json",
+  "version": 1,
+  "engine": "hermes",
+  "agent": {
+    "name": "Useful Assistant",
+    "description": "A vanilla Hermes starting point — persona in SOUL.md, conventions in AGENTS.md. Add skills and grow into whatever you need.",
+    "vibe": "resourceful, opinionated, gets things done",
+    "emoji": "🧠"
+  },
+  "template": {
+    "slug": "hermes-useful-assistant",
+    "category": "general",
+    "tags": ["assistant", "personal", "productivity", "hermes"],
+    "authorName": "Pinata"
+  },
+  "secrets": [
+    {
+      "name": "ANTHROPIC_API_KEY"
+    }
+  ],
+  "routes": [
+    {
+      "port": 5173,
+      "path": "/app",
+      "protected": false
+    }
+  ]
+}

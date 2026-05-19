@@ -13,7 +13,7 @@
     "slug": "useful-assistant",
     "category": "general",
     "tags": ["assistant", "personal", "productivity", "general"],
-    "partnerName": "Pinata"
+    "authorName": "Pinata"
   },
 
   "_docs": {
@@ -29,9 +29,9 @@
     "template.slug": "URL-friendly identifier (lowercase, hyphens only). Used in marketplace URLs.",
     "template.category": "Template category (e.g. general, defi, content, social, devops).",
     "template.tags": "Search tags, max 10. Help users discover your template.",
-    "template.partnerName": "Author or organization name.",
-    "template.partnerUrl": "Optional. Author website URL.",
-    "template.partnerLogoUrl": "Optional. Author logo URL.",
+    "template.authorName": "Author or organization name.",
+    "template.authorUrl": "Optional. Author website URL.",
+    "template.authorLogoUrl": "Optional. Author logo URL.",
 
     "model.primary": "Optional. Default model ID (e.g. 'anthropic/claude-sonnet-4-6'). If omitted, uses platform default.",
 
