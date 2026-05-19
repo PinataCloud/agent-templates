@@ -1,0 +1,78 @@
+---
+import Button from './ui/Button.astro';
+
+const apiUrl = `${import.meta.env.BASE_URL}/api/waitlist`;
+---
+
+<form id="waitlist-form" action={apiUrl} method="POST">
+  <div class="form-row">
+    <input type="email" name="email" placeholder="your@email.com" required />
+    <Button variant="primary" type="submit">Join</Button>
+  </div>
+  <p id="form-message" aria-live="polite"></p>
+</form>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const form = document.getElementById('waitlist-form') as HTMLFormElement;
+    const msg = document.getElementById('form-message')!;
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.textContent = '';
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+      });
+      const json = await res.json();
+      msg.textContent = res.ok ? "You're on the list!" : (json.error || 'Something went wrong');
+      msg.className = res.ok ? 'success' : 'error';
+      if (res.ok) form.reset();
+    });
+  });
+</script>
+
+<style>
+  form {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  input[type='email'] {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  input[type='email']:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  #form-message {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    min-height: 1.2em;
+  }
+
+  #form-message.success {
+    color: #22c55e;
+  }
+
+  #form-message.error {
+    color: #ef4444;
+  }
+</style>

@@ -1,0 +1,180 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Link from '../components/ui/Link.astro';
+import Text from '../components/ui/Text.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  fullWidth?: boolean;
+  brand?: string;
+  links?: Array<{ label: string; href: string }>;
+}
+
+const { title, description, fullWidth = false, brand = 'Web Master', links } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const navLinks = links ?? [
+  { label: 'Home', href: base },
+  { label: 'Blog', href: `${base}/blog` },
+  { label: 'Templates', href: `${base}/template` },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <header class="minimal-header">
+      <Link href={base} class="brand">{brand}<span class="dot">.</span></Link>
+      <button id="menu-toggle" class="menu-btn" aria-label="Toggle menu" aria-expanded="false">
+        Menu
+      </button>
+    </header>
+
+    <div id="menu-overlay" class="menu-overlay">
+      <nav>
+        {navLinks.map(link => (
+          <Link href={link.href} class="overlay-link">{link.label}</Link>
+        ))}
+      </nav>
+    </div>
+
+    <main class:list={[{ contained: !fullWidth }]}>
+      <slot />
+    </main>
+
+    <footer>
+      <Text variant="caption">Built with Astro + SQLite</Text>
+    </footer>
+  </body>
+</html>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const toggle = document.getElementById('menu-toggle');
+    const overlay = document.getElementById('menu-overlay');
+    if (!toggle || !overlay) return;
+
+    toggle.addEventListener('click', () => {
+      const open = overlay.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? 'Close' : 'Menu';
+    });
+
+    overlay.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        overlay.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.textContent = 'Menu';
+      });
+    });
+  });
+</script>
+
+<style>
+  .minimal-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    pointer-events: none;
+  }
+
+  .minimal-header > :global(*) {
+    pointer-events: auto;
+  }
+
+  .minimal-header :global(.brand) {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+  }
+
+  .dot {
+    color: var(--accent);
+  }
+
+  .menu-btn {
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .menu-btn:hover {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+
+  /* Overlay */
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--bg) 95%, transparent);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .menu-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .menu-overlay nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .menu-overlay :global(.overlay-link) {
+    font-family: var(--display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-muted);
+    transition: color 0.2s;
+  }
+
+  .menu-overlay :global(.overlay-link:hover) {
+    color: var(--accent);
+  }
+
+  /* Content */
+  main {
+    padding-top: 5rem;
+  }
+
+  main.contained {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+interface Props {
+  variant?: 'primary' | 'secondary';
+  class?: string;
+  [key: string]: any;
+}
+const { variant = 'primary', class: className, ...rest } = Astro.props;
+---
+<button class:list={[variant, className]} {...rest}>
+  <slot />
+</button>
+
+<style>
+  button {
+    font-family: var(--sans);
+    padding: 0.65rem 1.4rem;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, box-shadow 0.15s, border-color 0.15s;
+  }
+  .primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .primary:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 4px 15px var(--accent-glow);
+  }
+  .secondary {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .secondary:hover {
+    border-color: var(--accent);
+    background: var(--surface-hover);
+  }
+</style>

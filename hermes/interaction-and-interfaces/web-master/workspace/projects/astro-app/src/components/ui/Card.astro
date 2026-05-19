@@ -1,0 +1,29 @@
+---
+interface Props {
+  padding?: string;
+  class?: string;
+  [key: string]: any;
+}
+const { padding = '1.25rem', class: className, ...rest } = Astro.props;
+---
+<div class:list={['card', className]} style={`padding:${padding}`} {...rest}>
+  <slot />
+</div>
+
+<style>
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--accent) 6%, transparent);
+  }
+</style>

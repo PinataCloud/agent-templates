@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Link from '../../components/ui/Link.astro';
+import Text from '../../components/ui/Text.astro';
+
+const base = import.meta.env.BASE_URL;
+const posts = (await getCollection('blog')).sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+---
+
+<Layout title="Blog — Web Master">
+  <Text variant="title" style="margin-bottom: 1.5rem">Blog</Text>
+  {posts.length === 0 ? (
+    <Text variant="muted">No posts yet. Check back soon.</Text>
+  ) : (
+    <ul class="post-list">
+      {posts.map((post) => (
+        <li>
+          <Link href={`${base}/blog/${post.id}`} class="post-link">
+            <Text variant="subtitle" as="h2">{post.data.title}</Text>
+            <Text variant="caption" as="time" datetime={post.data.pubDate.toISOString()}>
+              {post.data.pubDate.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </Text>
+            <Text variant="muted" as="p">{post.data.description}</Text>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  )}
+</Layout>
+
+<style>
+  .post-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .post-list :global(.post-link) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .post-list :global(.post-link:hover) {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--accent) 6%, transparent);
+  }
+</style>

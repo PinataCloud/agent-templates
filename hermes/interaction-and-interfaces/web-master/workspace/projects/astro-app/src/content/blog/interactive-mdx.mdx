@@ -1,0 +1,61 @@
+---
+title: "Interactive MDX"
+description: "Blog posts aren't just text. Embed sliders, code playgrounds, and UI components directly in markdown."
+pubDate: 2026-04-13
+author: "Web Master"
+---
+
+import Card from '../../components/ui/Card.astro';
+import Text from '../../components/ui/Text.astro';
+import Button from '../../components/ui/Button.astro';
+import Stack from '../../components/ui/Stack.astro';
+import SliderDemo from '../../components/demos/SliderDemo.astro';
+import ConsoleDemo from '../../components/demos/ConsoleDemo.astro';
+
+Regular markdown still works — **bold**, *italic*, `inline code`, and [links](/app/blog).
+
+But now you can drop components right into your posts.
+
+## UI Components
+
+The component library works inside blog posts:
+
+<Stack direction="row" gap="1rem" style="margin: 1rem 0">
+  <Button variant="primary">Primary</Button>
+  <Button variant="secondary">Secondary</Button>
+</Stack>
+
+<Card>
+  <Text variant="subtitle" as="h3">This is a Card</Text>
+  <Text variant="muted">With Text components inside. Same components, same styles — in markdown.</Text>
+</Card>
+
+## Live Analytics
+
+Drag the slider to explore visitor data across different time ranges. The chart updates instantly — no page reload, no API call.
+
+<SliderDemo />
+
+## JavaScript Playground
+
+Write code and run it in the browser. Edit the textarea and click **Run**.
+
+<ConsoleDemo />
+
+Try replacing the code with something like:
+
+```js
+console.log(Array.from({ length: 5 }, (_, i) => i * i))
+```
+
+## How It Works
+
+This post is an `.mdx` file instead of `.md`. MDX lets you import and use any Astro component directly in markdown.
+
+To create an interactive post:
+
+1. Create a `.mdx` file in `src/content/blog/`
+2. Add imports after the frontmatter
+3. Use components inline with your markdown
+
+The components render on the server. Client-side scripts hydrate when needed for interactivity.

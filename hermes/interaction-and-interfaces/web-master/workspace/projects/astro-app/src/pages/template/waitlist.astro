@@ -1,0 +1,788 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+
+const base = import.meta.env.BASE_URL;
+const apiUrl = `${base}/api/waitlist`;
+
+const jobs = [
+  { title: 'Senior React Developer', desc: 'Full-stack SaaS rebuild, 3-month contract', match: '93%', color: '#FF4500' },
+  { title: 'Brand Identity Designer', desc: 'Visual system for fintech startup', match: '87%', color: '#FF69B4' },
+  { title: 'Python Data Engineer', desc: 'ETL pipeline for healthcare analytics', match: '91%', color: '#00BFFF' },
+  { title: 'UX Researcher', desc: 'User testing for mobile banking app', match: '85%', color: '#A855F7' },
+  { title: 'WordPress Developer', desc: 'E-commerce migration, WooCommerce', match: '78%', color: '#22C55E' },
+  { title: 'Motion Designer', desc: 'Product launch video series, 6 weeks', match: '89%', color: '#F59E0B' },
+];
+
+const platforms = ['Upwork', 'Toptal', 'LinkedIn', 'Fiverr', 'We Work Remotely', 'AngelList', 'Dribbble', 'Indeed'];
+
+const steps = [
+  { num: '1', title: 'Tell us your skills', desc: 'Set your expertise, rate, and availability once. We remember.' },
+  { num: '2', title: 'Get matched daily', desc: 'Our AI scours every major platform and delivers your top matches by 8am.' },
+  { num: '3', title: 'Apply in one click', desc: 'Pre-filled proposals tailored to each job. Review, edit, send.' },
+];
+
+const gridCells = Array.from({ length: 48 }, (_, i) => ((i * 7 + 3) % 11) * 0.45);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title="Waitlist — Web Master Templates" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+
+    <!-- Header -->
+    <header class="site-header">
+      <a href="#" class="logo">freelancefunnel</a>
+      <nav class="header-nav">
+        <a href={`${base}/template`} class="back-link">&larr; Templates</a>
+        <a href="#cta" class="header-cta">Join the beta</a>
+      </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="aura aura-1"></div>
+      <div class="aura aura-2"></div>
+      <div class="aura aura-3"></div>
+      <div class="hero-inner">
+        <span class="pill">Now in public beta</span>
+        <h1>Your daily list of<br /><span class="dim">fresh freelance leads</span></h1>
+        <p class="hero-sub">AI-curated job matches delivered to your inbox every morning. Stop scrolling job boards&mdash;start landing clients.</p>
+        <form class="cta-pill" data-api={apiUrl}>
+          <input type="email" name="email" placeholder="Enter your email" required />
+          <button type="submit">Get early access</button>
+        </form>
+        <p class="cta-micro">First 100 sign-ups get a lifetime discount.</p>
+      </div>
+    </section>
+
+    <!-- Feature: Scrolling Feed -->
+    <section class="feature-section">
+      <div class="inner">
+        <div class="feature-card">
+          <div class="feature-visual">
+            <div class="feed-card">
+              <div class="feed-header">
+                <div class="loading-dots"><span /><span /><span /></div>
+                <span class="feed-status">Live feed &mdash; updating</span>
+              </div>
+              <div class="feed-scroll">
+                <div class="feed-items">
+                  {[...jobs, ...jobs].map(j => (
+                    <div class="job-lead">
+                      <div class="job-dot" style={`background:${j.color}`} />
+                      <div class="job-info">
+                        <span class="job-title">{j.title}</span>
+                        <span class="job-desc">{j.desc}</span>
+                      </div>
+                      <span class="match-badge">{j.match} &uarr;</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="feature-text">
+            <span class="pill">The problem</span>
+            <h2>You're drowning in<br /><span class="dim">job board noise</span></h2>
+            <p>Hundreds of listings. Dozens of tabs. Hours wasted every week scrolling through irrelevant posts. You need a filter, not another feed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <section class="marquee-section">
+      <p class="marquee-label">One dashboard. All the freelance leads.</p>
+      <div class="marquee">
+        <div class="marquee-track">
+          {[...platforms, ...platforms].map(p => (
+            <span class="marquee-item">{p}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature: Animated Grid -->
+    <section class="feature-section">
+      <div class="inner">
+        <div class="feature-card reverse">
+          <div class="feature-visual">
+            <div class="grid-visual">
+              {gridCells.map(delay => (
+                <div class="grid-cell" style={`animation-delay:${delay}s`} />
+              ))}
+            </div>
+          </div>
+          <div class="feature-text">
+            <span class="pill">Smart matching</span>
+            <h2>AI that learns<br /><span class="dim">what you're good at</span></h2>
+            <p>Our matching engine analyzes your skills, past projects, and preferences. Every day it gets smarter. Every lead gets more relevant.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Solution: Cascading Cards -->
+    <section class="solution-section">
+      <div class="inner">
+        <div class="solution-intro">
+          <span class="pill">The solution</span>
+          <h2>Three steps to<br /><span class="dim">your next client</span></h2>
+        </div>
+        <div class="cascade">
+          {steps.map((s, i) => (
+            <div class="cascade-card" style={`--offset:${i}`}>
+              <span class="step-num">{s.num}</span>
+              <h3>{s.title}</h3>
+              <p>{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section id="cta" class="final-cta">
+      <div class="inner">
+        <h2>Stop searching.<br /><span class="dim">Start landing.</span></h2>
+        <form class="cta-pill" data-api={apiUrl}>
+          <input type="email" name="email" placeholder="Enter your email" required />
+          <button type="submit">Get early access</button>
+        </form>
+        <p class="cta-micro">Free during beta. No credit card required.</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <span>&copy; 2026 freelancefunnel. Built with Astro.</span>
+    </footer>
+
+  </body>
+</html>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    document.querySelectorAll('.cta-pill').forEach(form => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const f = e.currentTarget as HTMLFormElement;
+        const input = f.querySelector('input') as HTMLInputElement;
+        const micro = f.nextElementSibling as HTMLElement;
+        if (!input.value.trim()) return;
+
+        const data = new FormData();
+        data.append('email', input.value.trim());
+
+        const res = await fetch(f.dataset.api!, { method: 'POST', body: data });
+        const json = await res.json();
+
+        if (micro) {
+          micro.textContent = res.ok ? "You're on the list!" : (json.error || 'Something went wrong');
+          micro.style.color = res.ok ? '#00FF00' : '#FF4500';
+        }
+        if (res.ok) input.value = '';
+      });
+    });
+  });
+</script>
+
+<!-- Force dark theme -->
+<style is:global>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #111111;
+    --surface-2: #1A1A1A;
+    --border: #222222;
+    --text: #FFFFFF;
+    --text-muted: #888888;
+    --accent: #FF4500;
+    --accent-hover: #E03E00;
+    --accent-glow: rgba(255, 69, 0, 0.25);
+    --success: #00FF00;
+    --display: 'Outfit', sans-serif;
+    --sans: 'Outfit', sans-serif;
+    --radius: 12px;
+    --max-w: 1080px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #0A0A0A;
+      --surface: #111111;
+      --surface-2: #1A1A1A;
+      --border: #222222;
+      --text: #FFFFFF;
+      --text-muted: #888888;
+      --accent: #FF4500;
+      --accent-hover: #E03E00;
+      --accent-glow: rgba(255, 69, 0, 0.25);
+      --success: #00FF00;
+    }
+  }
+</style>
+
+<style>
+  /* ---- Shared ---- */
+  .inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .pill {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text-muted);
+  }
+
+  .dim {
+    color: var(--text-muted);
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin-top: 1rem;
+  }
+
+  /* ---- Header ---- */
+  .site-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    background: transparent;
+  }
+
+  .logo {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .back-link {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--text); }
+
+  .header-cta {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem 1.25rem;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s;
+    backdrop-filter: blur(10px);
+  }
+  .header-cta:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* ---- Hero ---- */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  body {
+    position: relative;
+  }
+
+  .hero {
+    position: relative;
+    padding: 10rem 2rem 8rem;
+    text-align: center;
+  }
+
+  .aura {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(140px);
+    pointer-events: none;
+  }
+  .aura-1 {
+    width: 600px; height: 600px;
+    background: #FF4500;
+    top: -200px; right: -150px;
+    opacity: 0.35;
+  }
+  .aura-2 {
+    width: 500px; height: 500px;
+    background: #FF69B4;
+    bottom: -200px; left: -150px;
+    opacity: 0.3;
+  }
+  .aura-3 {
+    width: 350px; height: 350px;
+    background: #00BFFF;
+    top: 30%; left: 10%;
+    opacity: 0.25;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    animation: fade-in 0.7s ease both;
+  }
+
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 7vw, 4.2rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    max-width: 480px;
+  }
+
+  /* ---- Pill CTA Input ---- */
+  .cta-pill {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.3rem 0.3rem 0.3rem 1.25rem;
+    max-width: 460px;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .cta-pill input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    min-width: 0;
+  }
+  .cta-pill input::placeholder { color: #555; }
+
+  .cta-pill button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.7rem 1.4rem;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .cta-pill button:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+
+  .cta-micro {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* ---- Feature Section (side-by-side cards) ---- */
+  .feature-section {
+    padding: 5rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .feature-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .feature-card.reverse {
+    direction: rtl;
+  }
+  .feature-card.reverse > * {
+    direction: ltr;
+  }
+
+  .feature-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .feature-text p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.65;
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .feature-card, .feature-card.reverse {
+      grid-template-columns: 1fr;
+      direction: ltr;
+    }
+    .feature-visual { order: -1; }
+  }
+
+  /* ---- Scrolling Feed ---- */
+  .feed-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .feed-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .loading-dots {
+    display: flex;
+    gap: 4px;
+  }
+  .loading-dots span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: dot-pulse 1.4s infinite ease-in-out both;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  .feed-status {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .feed-scroll {
+    height: 340px;
+    overflow: hidden;
+  }
+
+  .feed-items {
+    animation: scroll-feed 18s linear infinite;
+  }
+
+  .job-lead {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  }
+
+  .job-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .job-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+  }
+
+  .job-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .job-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .match-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--success);
+    background: color-mix(in srgb, var(--success) 10%, transparent);
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  /* ---- Animated Grid ---- */
+  .grid-visual {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .grid-cell {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: var(--surface-2);
+    animation: cell-glow 3.5s ease-in-out infinite alternate;
+  }
+
+  /* ---- Marquee ---- */
+  .marquee-section {
+    padding: 3rem 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .marquee-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.03em;
+  }
+
+  .marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 3rem;
+    width: max-content;
+    animation: marquee 25s linear infinite;
+  }
+
+  .marquee-item {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    opacity: 0.2;
+    white-space: nowrap;
+  }
+
+  /* ---- Solution: Cascading Cards ---- */
+  .solution-section {
+    padding: 5rem 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .solution-intro {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cascade {
+    display: flex;
+    justify-content: center;
+    padding: 3rem 0 2rem;
+  }
+
+  .cascade-card {
+    width: 300px;
+    flex-shrink: 0;
+    margin-left: -50px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    z-index: calc(var(--offset) + 1);
+    transform: rotate(calc((var(--offset) - 1) * 5deg));
+    transition: transform 0.3s, z-index 0.3s;
+  }
+  .cascade-card:first-child { margin-left: 0; }
+
+  .cascade-card:hover {
+    transform: rotate(0deg) translateY(-10px);
+    z-index: 10;
+  }
+
+  .step-num {
+    width: 28px; height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .cascade-card h3 {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .cascade-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .cascade {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .cascade-card {
+      margin-left: 0;
+      width: 100%;
+      max-width: 340px;
+      transform: none;
+    }
+    .cascade-card:hover { transform: translateY(-4px); }
+  }
+
+  /* ---- Final CTA ---- */
+  .final-cta {
+    padding: 6rem 0;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+
+  .final-cta .inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  /* ---- Footer ---- */
+  .site-footer {
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #444;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ---- Mobile ---- */
+  @media (max-width: 640px) {
+    .inner {
+      padding: 0 1.25rem;
+    }
+
+    .site-header {
+      padding: 1rem 1.25rem;
+    }
+
+    .back-link {
+      display: none;
+    }
+
+    .hero {
+      padding: 6rem 1.25rem 4rem;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+    }
+
+    .cta-pill {
+      padding: 0.25rem 0.25rem 0.25rem 1rem;
+    }
+
+    .cta-pill button {
+      padding: 0.6rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    .feature-section {
+      padding: 3rem 0;
+    }
+
+    .feed-card {
+      margin: 0 -0.25rem;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 6vw, 2.5rem);
+    }
+
+    .aura-1 { width: 300px; height: 300px; right: -50px; top: -100px; }
+    .aura-2 { width: 250px; height: 250px; left: -50px; bottom: -100px; }
+    .aura-3 { width: 200px; height: 200px; left: 0; top: 20%; }
+  }
+
+  /* ---- Keyframes ---- */
+  @keyframes dot-pulse {
+    0%, 80%, 100% { opacity: 0.3; }
+    40% { opacity: 1; }
+  }
+
+  @keyframes scroll-feed {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes cell-glow {
+    0%, 60%, 100% { background: var(--surface-2); }
+    75% { background: color-mix(in srgb, var(--accent) 35%, var(--surface-2)); }
+  }
+</style>

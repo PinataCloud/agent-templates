@@ -1,0 +1,19 @@
+---
+interface Props {
+  direction?: 'row' | 'column';
+  gap?: string;
+  align?: string;
+  class?: string;
+  [key: string]: any;
+}
+const { direction = 'column', gap = '1rem', align, class: className, ...rest } = Astro.props;
+const style = [
+  'display:flex',
+  `flex-direction:${direction}`,
+  `gap:${gap}`,
+  align && `align-items:${align}`,
+].filter(Boolean).join(';');
+---
+<div class:list={[className]} style={style} {...rest}>
+  <slot />
+</div>

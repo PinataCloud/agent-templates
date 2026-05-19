@@ -1,0 +1,11 @@
+---
+interface Props {
+  padding?: string;
+  class?: string;
+  [key: string]: any;
+}
+const { padding = '1rem', class: className, ...rest } = Astro.props;
+---
+<div class:list={[className]} style={`padding:${padding}`} {...rest}>
+  <slot />
+</div>

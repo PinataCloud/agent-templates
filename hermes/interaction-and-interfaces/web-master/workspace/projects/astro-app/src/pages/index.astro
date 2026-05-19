@@ -1,0 +1,179 @@
+---
+import Layout from '../layouts/Layout.astro';
+import WaitlistForm from '../components/WaitlistForm.astro';
+import Button from '../components/ui/Button.astro';
+import Text from '../components/ui/Text.astro';
+import Link from '../components/ui/Link.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Layout title="Web Master" fullWidth>
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title">Web Master<span class="dot">.</span></h1>
+      <p class="hero-sub">
+        Fast, intentional websites built with Astro.<br />
+        Server-rendered. Content-first. Zero bloat.
+      </p>
+      <div class="hero-actions">
+        <Link href={`${base}/blog`}>
+          <Button variant="primary">Read the Blog &rarr;</Button>
+        </Link>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="features-inner">
+      <div class="feature-card" style="animation-delay: 0.1s">
+        <span class="feature-num">01</span>
+        <h3>Server-Rendered</h3>
+        <p>Astro SSR delivers fast, dynamic pages with minimal client JavaScript. Every page loads instantly.</p>
+      </div>
+      <div class="feature-card" style="animation-delay: 0.2s">
+        <span class="feature-num">02</span>
+        <h3>SQLite Storage</h3>
+        <p>Embedded database for forms and data. No external services, no latency, no configuration.</p>
+      </div>
+      <div class="feature-card" style="animation-delay: 0.3s">
+        <span class="feature-num">03</span>
+        <h3>Content Blog</h3>
+        <p>Markdown and MDX files become blog posts with interactive components. Write content, not configuration.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="waitlist">
+    <div class="waitlist-inner">
+      <Text variant="subtitle" as="h2">Stay in the loop</Text>
+      <p class="waitlist-desc">Get notified when new features drop.</p>
+      <WaitlistForm />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    padding: 7rem 1.5rem 6rem;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at 25% 80%, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 50%),
+      radial-gradient(ellipse at 75% 20%, color-mix(in srgb, #4060ff 5%, transparent) 0%, transparent 50%),
+      var(--bg);
+  }
+
+  .hero-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    animation: fade-in 0.6s ease both;
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    background: linear-gradient(135deg, var(--text) 30%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-title .dot {
+    -webkit-text-fill-color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 480px;
+  }
+
+  .hero-actions {
+    margin-top: 0.5rem;
+  }
+
+  /* Features */
+  .features {
+    border-top: 1px solid var(--border);
+    padding: 4.5rem 1.5rem;
+  }
+
+  .features-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    animation: fade-up 0.5s ease both;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+    box-shadow: 0 8px 30px color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  .feature-num {
+    font-family: var(--display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+
+  .feature-card h3 {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .feature-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* Waitlist */
+  .waitlist {
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .waitlist-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .waitlist-desc {
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+</style>

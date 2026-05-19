@@ -1,0 +1,53 @@
+# Ignore everything except workspace, skills, manifest.json, README.md
+*
+!workspace/
+!workspace/**
+!skills/
+!skills/**
+!manifest.json
+!README.md
+!.gitignore
+
+# Dependencies (re-ignore inside workspace/skills)
+**/node_modules/
+**/bower_components/
+
+# Python
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.venv/
+**/venv/
+**/.tox/
+
+# Build outputs
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+**/.output/
+**/.turbo/
+**/.astro/
+
+# Astro app runtime data (created on deploy)
+**/projects/astro-app/data/
+
+# Sensitive files and OS junk
+.DS_Store
+**/.DS_Store
+.env
+**/*.key
+**/*.pem
+**/secrets*
+
+# Editor/IDE
+**/.idea/
+**/.vscode/
+
+# Build artifacts and temp files
+**/*.log
+**/*.tmp
+**/*.bak
+**/*.bak.*
+**/.cache

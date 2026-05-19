@@ -1,0 +1,283 @@
+---
+import SidebarLayout from '../../layouts/SidebarLayout.astro';
+import Text from '../../components/ui/Text.astro';
+import Link from '../../components/ui/Link.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const projects = [
+  { name: 'Meridian', category: 'Brand Identity', desc: 'Complete visual identity for a sustainable fashion brand.', color: '#e8735a', image: 'https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/dressdrawing.jpg' },
+  { name: 'Solstice', category: 'Web Platform', desc: 'E-commerce redesign for a direct-to-consumer startup.', color: '#4a90d9', image: 'https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/laptopwork.jpg' },
+  { name: 'Evergreen', category: 'Mobile App', desc: 'Health and wellness app focused on mindful daily habits.', color: '#3db88c', image: 'https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/flowerfield.jpg' },
+  { name: 'Prism', category: 'Visual Identity', desc: 'Bold visual system for an emerging tech conference.', color: '#9b72cf', image: 'https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/presentation.jpg' },
+  { name: 'Wavelength', category: 'Product Design', desc: 'Podcast platform with social listening features.', color: '#e0a246', image: 'https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/workwhiteblack.jpg' },
+  { name: 'Monolith', category: 'Architecture', desc: 'Portfolio website for an award-winning architecture firm.', color: '#5a6578', image: 'https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/modernhousepool.jpg' },
+];
+---
+
+<SidebarLayout
+  title="Portfolio — Web Master Templates"
+  brand="Alex Rivera"
+  links={[
+    { label: 'Work', href: '#work' },
+    { label: 'About', href: '#about' },
+    { label: 'Contact', href: '#contact' },
+    { label: '\u2190 Templates', href: `${base}/template` },
+  ]}
+>
+  <!-- Hero -->
+  <section class="hero">
+    <p class="hero-greeting">Hello, I'm</p>
+    <h1 class="hero-name">Alex Rivera</h1>
+    <p class="hero-role">Digital Designer & Creative Developer</p>
+    <p class="hero-bio">I design and build digital products that are beautiful, functional, and fast. Ten years of crafting interfaces for startups, agencies, and brands that care about the details.</p>
+  </section>
+
+  <!-- Work -->
+  <section id="work" class="work">
+    <h2 class="section-label">Selected Work</h2>
+    <div class="project-grid">
+      {projects.map((p, i) => (
+        <div class="project-card" style={`animation-delay: ${0.1 + i * 0.08}s`}>
+          <div class="project-thumb" style={`background-image: url(${p.image}); background-size: cover; background-position: center;`}>
+          </div>
+          <div class="project-info">
+            <span class="project-category" style={`color: ${p.color}`}>{p.category}</span>
+            <h3>{p.name}</h3>
+            <p>{p.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="about">
+    <h2 class="section-label">About</h2>
+    <div class="about-content">
+      <p>I've spent the last decade at the intersection of design and engineering. I believe the best digital products come from understanding both sides &mdash; how something should feel and how to make it real.</p>
+      <p>My approach is simple: listen first, then design with intent. Every pixel, every interaction, every line of code should earn its place.</p>
+      <div class="about-details">
+        <div class="detail">
+          <span class="detail-label">Based in</span>
+          <span>Portland, OR</span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Experience</span>
+          <span>10+ years</span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Availability</span>
+          <span class="available">Open to projects</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact">
+    <h2 class="section-label">Get in touch</h2>
+    <p class="contact-text">Have a project in mind? I'd love to hear about it.</p>
+    <a href="mailto:hello@alexrivera.design" class="contact-link">hello@alexrivera.design</a>
+  </section>
+</SidebarLayout>
+
+<style is:global>
+  :root {
+    --accent: #e8735a;
+    --accent-hover: #d4624a;
+    --accent-glow: color-mix(in srgb, #e8735a 15%, transparent);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --accent: #d4624a;
+      --accent-hover: #c05538;
+      --accent-glow: color-mix(in srgb, #d4624a 12%, transparent);
+    }
+  }
+</style>
+
+<style>
+  .hero {
+    padding: 2rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+    animation: fade-in 0.5s ease both;
+  }
+
+  .hero-greeting {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-name {
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .hero-role {
+    font-size: 1.15rem;
+    color: var(--accent);
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+
+  .hero-bio {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.65;
+    max-width: 560px;
+    margin-top: 1rem;
+  }
+
+  /* Work */
+  .work {
+    padding: 3rem 0;
+    scroll-margin-top: 80px;
+  }
+
+  .section-label {
+    font-family: var(--display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    animation: fade-up 0.5s ease both;
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+
+  .project-thumb {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .thumb-text {
+    font-family: var(--display);
+    font-size: 3rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .project-info {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .project-category {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .project-info h3 {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .project-info p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* About */
+  .about {
+    padding: 3rem 0;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: 80px;
+  }
+
+  .about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 560px;
+  }
+
+  .about-content > p {
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  .about-details {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.95rem;
+  }
+
+  .detail-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .available {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* Contact */
+  .contact {
+    padding: 3rem 0;
+    border-top: 1px solid var(--border);
+    scroll-margin-top: 80px;
+  }
+
+  .contact-text {
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .contact-link {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .contact-link:hover {
+    opacity: 0.8;
+  }
+</style>

@@ -1,0 +1,169 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Link from '../components/ui/Link.astro';
+import Text from '../components/ui/Text.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  fullWidth?: boolean;
+  brand?: string;
+  links?: Array<{ label: string; href: string }>;
+}
+
+const { title, description, fullWidth = false, brand = 'Web Master', links } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const navLinks = links ?? [
+  { label: 'Home', href: base },
+  { label: 'Blog', href: `${base}/blog` },
+  { label: 'Templates', href: `${base}/template` },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <Link href={base} class="brand">{brand}<span class="dot">.</span></Link>
+      <nav class="sidebar-nav">
+        {navLinks.map(link => (
+          <Link href={link.href} class="sidebar-link">{link.label}</Link>
+        ))}
+      </nav>
+      <div class="sidebar-footer">
+        <Text variant="caption">Built with Astro</Text>
+      </div>
+    </aside>
+    <div class="main-area">
+      <main class:list={[{ contained: !fullWidth }]}>
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
+  });
+</script>
+
+<style>
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    z-index: 100;
+  }
+
+  .sidebar :global(.brand) {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 2.5rem;
+  }
+
+  .dot {
+    color: var(--accent);
+  }
+
+  .sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .sidebar :global(.sidebar-link) {
+    display: block;
+    padding: 0.55rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .sidebar :global(.sidebar-link:hover) {
+    color: var(--text);
+    background: var(--surface-hover);
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+  }
+
+  .main-area {
+    margin-left: 240px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  main.contained {
+    max-width: var(--max-w);
+    padding: 2.5rem 2rem;
+  }
+
+  /* Mobile: sidebar becomes top bar */
+  @media (max-width: 768px) {
+    .sidebar {
+      position: sticky;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: auto;
+      width: 100%;
+      height: auto;
+      flex-direction: row;
+      align-items: center;
+      gap: 2rem;
+      padding: 0.85rem 1.5rem;
+      background: color-mix(in srgb, var(--surface) 90%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .sidebar :global(.brand) {
+      margin-bottom: 0;
+      font-size: 1.1rem;
+    }
+
+    .sidebar-nav {
+      flex-direction: row;
+      gap: 0.5rem;
+    }
+
+    .sidebar :global(.sidebar-link) {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.9rem;
+    }
+
+    .sidebar-footer {
+      display: none;
+    }
+
+    .main-area {
+      margin-left: 0;
+    }
+
+    main.contained {
+      padding: 2rem 1.5rem;
+    }
+  }
+</style>

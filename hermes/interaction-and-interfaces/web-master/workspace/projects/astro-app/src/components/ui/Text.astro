@@ -1,0 +1,61 @@
+---
+interface Props {
+  variant?: 'title' | 'subtitle' | 'copy' | 'caption' | 'link' | 'muted';
+  as?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const { variant = 'copy', as: tag, class: className, ...rest } = Astro.props;
+
+const defaultTags: Record<string, string> = {
+  title: 'h1',
+  subtitle: 'h2',
+  copy: 'p',
+  caption: 'span',
+  link: 'span',
+  muted: 'span',
+};
+
+const Element = tag || defaultTags[variant] || 'span';
+---
+<Element class:list={[variant, className]} {...rest}>
+  <slot />
+</Element>
+
+<style>
+  .title {
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin: 0;
+  }
+  .subtitle {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .copy {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .caption {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .link {
+    color: var(--accent);
+    transition: color 0.15s;
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+  .muted {
+    color: var(--text-muted);
+  }
+</style>

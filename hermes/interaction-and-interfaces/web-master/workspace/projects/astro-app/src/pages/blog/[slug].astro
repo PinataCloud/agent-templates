@@ -1,0 +1,103 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Link from '../../components/ui/Link.astro';
+import Text from '../../components/ui/Text.astro';
+
+const { slug } = Astro.params;
+const posts = await getCollection('blog');
+const post = posts.find((p) => p.id === slug);
+
+if (!post) {
+  return Astro.redirect(`${import.meta.env.BASE_URL}/blog`);
+}
+
+const { Content } = await render(post);
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <article>
+    <header>
+      <Text variant="title" style="margin-bottom: 0.5rem">{post.data.title}</Text>
+      <div class="meta">
+        <Text variant="caption" as="time" datetime={post.data.pubDate.toISOString()}>
+          {post.data.pubDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </Text>
+        <Text variant="caption">by {post.data.author}</Text>
+      </div>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+    <footer>
+      <Link href={`${import.meta.env.BASE_URL}/blog`}>
+        <Text variant="link">&larr; Back to blog</Text>
+      </Link>
+    </footer>
+  </article>
+</Layout>
+
+<style>
+  article header {
+    margin-bottom: 2rem;
+  }
+
+  .meta {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .prose {
+    line-height: 1.75;
+  }
+
+  .prose :global(a) {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .prose :global(a:hover) {
+    text-decoration: underline;
+  }
+
+  .prose :global(h2) {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  .prose :global(code) {
+    font-family: var(--mono);
+    background: var(--surface);
+    padding: 0.15em 0.35em;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  .prose :global(pre) {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    padding: 0;
+  }
+
+  article footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+</style>

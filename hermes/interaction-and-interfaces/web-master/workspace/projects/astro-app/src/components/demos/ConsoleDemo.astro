@@ -1,0 +1,86 @@
+---
+import Button from '../ui/Button.astro';
+---
+
+<div class="console-demo">
+  <textarea id="code-input" rows="4" spellcheck="false">console.log('Hello from MDX!')
+console.log('2 + 2 =', 2 + 2)
+console.log('Time:', new Date().toLocaleTimeString())</textarea>
+  <div class="toolbar">
+    <Button variant="primary" id="run-btn">Run</Button>
+  </div>
+  <pre id="console-output">// click Run to see output</pre>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const input = document.getElementById('code-input') as HTMLTextAreaElement;
+    const btn = document.getElementById('run-btn');
+    const output = document.getElementById('console-output')!;
+    if (!btn || !input) return;
+
+    btn.addEventListener('click', () => {
+      const logs: string[] = [];
+      const originalLog = console.log;
+      console.log = (...args: any[]) => {
+        logs.push(
+          args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ')
+        );
+      };
+      try {
+        new Function(input.value)();
+        output.textContent = logs.length ? logs.join('\n') : '// (no output)';
+        output.className = '';
+      } catch (e: any) {
+        output.textContent = `Error: ${e.message}`;
+        output.className = 'error';
+      }
+      console.log = originalLog;
+    });
+  });
+</script>
+
+<style>
+  .console-demo {
+    margin: 1rem 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  textarea {
+    display: block;
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    padding: 1rem;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border: none;
+    resize: vertical;
+    line-height: 1.6;
+    outline: none;
+  }
+
+  .toolbar {
+    padding: 0.5rem 1rem;
+    background: #1e1e2e;
+    border-top: 1px solid #313244;
+  }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    padding: 1rem;
+    background: #11111b;
+    color: #a6adc8;
+    margin: 0;
+    min-height: 2.5rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  pre.error {
+    color: #f38ba8;
+  }
+</style>

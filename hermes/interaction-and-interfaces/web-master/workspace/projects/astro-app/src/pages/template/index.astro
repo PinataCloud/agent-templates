@@ -1,0 +1,223 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Text from '../../components/ui/Text.astro';
+import Link from '../../components/ui/Link.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const templates = [
+  {
+    id: 'starter',
+    name: 'Starter',
+    layout: 'Layout',
+    description: 'SaaS landing page with hero, feature grid, stats, and waitlist. The classic top-nav done right.',
+    accent: '#00d4aa',
+    wire: 'topnav',
+  },
+  {
+    id: 'portfolio',
+    name: 'Portfolio',
+    layout: 'SidebarLayout',
+    description: 'Creative portfolio with fixed sidebar navigation and a project showcase grid.',
+    accent: '#e8735a',
+    wire: 'sidebar',
+  },
+  {
+    id: 'studio',
+    name: 'Studio',
+    layout: 'MinimalLayout',
+    description: 'Design agency with dramatic typography, overlay menu, and editorial service blocks.',
+    accent: '#6c8aff',
+    wire: 'minimal',
+  },
+  {
+    id: 'waitlist',
+    name: 'Waitlist',
+    layout: 'Custom',
+    description: 'Dark-mode landing with gradient auras, scrolling feed, marquee, cascading cards, and animated grid.',
+    accent: '#FF4500',
+    wire: 'topnav',
+  },
+];
+---
+
+<Layout title="Templates — Web Master">
+  <section class="header">
+    <Text variant="title">Templates</Text>
+    <p class="subtitle">Starting points for your next project. Each uses a different layout and design approach.</p>
+  </section>
+
+  <div class="grid">
+    {templates.map((t, i) => (
+      <Link href={`${base}/template/${t.id}`} class="card" style={`animation-delay: ${0.1 + i * 0.1}s`}>
+        <div class="wireframe" data-wire={t.wire}>
+          <div class="w-nav" style={`background: ${t.accent}`} />
+          <div class="w-body">
+            {t.wire === 'sidebar' && <div class="w-side" style={`background: ${t.accent}`} />}
+            <div class="w-content">
+              <div class="w-line" />
+              <div class="w-line short" />
+              <div class="w-blocks">
+                <div class="w-block" />
+                <div class="w-block" />
+                {t.wire !== 'sidebar' && <div class="w-block" />}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-header">
+            <h3>{t.name}</h3>
+            <span class="badge" style={`color: ${t.accent}; border-color: ${t.accent}`}>{t.layout}</span>
+          </div>
+          <p>{t.description}</p>
+        </div>
+      </Link>
+    ))}
+  </div>
+</Layout>
+
+<style>
+  .header {
+    padding: 2rem 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+    padding: 1rem 0 3rem;
+  }
+
+  .grid :global(.card) {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    animation: fade-up 0.5s ease both;
+  }
+
+  .grid :global(.card:hover) {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+    box-shadow: 0 8px 30px color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  /* Wireframe mini-previews */
+  .wireframe {
+    height: 160px;
+    background: var(--bg);
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .w-nav {
+    height: 4px;
+    border-radius: 2px;
+    opacity: 0.6;
+  }
+
+  [data-wire="minimal"] .w-nav {
+    width: 30%;
+    align-self: center;
+  }
+
+  .w-body {
+    flex: 1;
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .w-side {
+    width: 22%;
+    border-radius: 3px;
+    opacity: 0.3;
+  }
+
+  .w-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .w-line {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    width: 60%;
+  }
+
+  .w-line.short {
+    width: 35%;
+  }
+
+  [data-wire="minimal"] .w-line {
+    align-self: center;
+  }
+
+  .w-blocks {
+    flex: 1;
+    display: flex;
+    gap: 0.3rem;
+    margin-top: 0.2rem;
+  }
+
+  .w-block {
+    flex: 1;
+    background: var(--border);
+    border-radius: 3px;
+    opacity: 0.5;
+  }
+
+  /* Card info */
+  .card-info {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .card-header h3 {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .card-info p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+</style>

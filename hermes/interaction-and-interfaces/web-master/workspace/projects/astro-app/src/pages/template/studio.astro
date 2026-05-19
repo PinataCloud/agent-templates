@@ -1,0 +1,391 @@
+---
+import MinimalLayout from '../../layouts/MinimalLayout.astro';
+import Link from '../../components/ui/Link.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const credentials = [
+  { value: '12', label: 'Years' },
+  { value: '200+', label: 'Projects' },
+  { value: '30', label: 'Awards' },
+  { value: 'Global', label: 'Reach' },
+];
+
+const services = [
+  {
+    num: '01',
+    title: 'Brand Strategy',
+    desc: 'We dig into who you are, what you stand for, and why anyone should care. Then we build a brand identity that makes it obvious.',
+    image: 'https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/presentation.jpg'
+  },
+  {
+    num: '02',
+    title: 'Digital Design',
+    desc: 'Interfaces that feel right. We obsess over typography, spacing, and interaction design until every screen earns its place.',
+    image: 'https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/workwhiteblack.jpg'
+  },
+  {
+    num: '03',
+    title: 'Development',
+    desc: 'Clean, performant code built with modern frameworks and deployed to the edge. Fast by default, accessible always.',
+    image: 'https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/laptopwork.jpg'
+  },
+];
+---
+
+<MinimalLayout
+  title="Studio — Web Master Templates"
+  fullWidth
+  brand="Atelier"
+  links={[
+    { label: 'Work', href: '#credentials' },
+    { label: 'Services', href: '#services' },
+    { label: 'Contact', href: '#contact' },
+    { label: '\u2190 Templates', href: `${base}/template` },
+  ]}
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner hero-split">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          We craft digital<br />
+          experiences that<br />
+          <span class="hero-accent">matter</span><span class="dot">.</span>
+        </h1>
+        <p class="hero-sub">Strategy, design, and development for brands that refuse to blend in.</p>
+      </div>
+      <div class="hero-visual">
+        <img src="https://pamadd.mypinata.cloud/ipfs/bafybeif5zr4xibk7fgxqttssqehfg5kdy44bnl2vxvmhilouik22u6wufe/meetingroom.jpg" alt="Modern office meeting room with professionals" class="hero-image" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Credentials -->
+  <section id="credentials" class="credentials">
+    <div class="inner">
+      <div class="cred-grid">
+        {credentials.map(c => (
+          <div class="cred">
+            <span class="cred-value">{c.value}</span>
+            <span class="cred-label">{c.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="services">
+    <div class="inner">
+      <h2 class="section-label">What We Do</h2>
+      <div class="service-list">
+        {services.map((s, i) => (
+          <div class="service" style={`animation-delay: ${0.1 + i * 0.15}s`}>
+            <div class="service-content">
+              <div class="service-header">
+                <span class="service-num">{s.num}</span>
+                <h3>{s.title}</h3>
+              </div>
+              <p>{s.desc}</p>
+            </div>
+            <div class="service-image-wrapper">
+              <img src={s.image} alt={s.title} class="service-image" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact">
+    <div class="inner">
+      <h2 class="contact-title">Have a project<br />in mind<span class="dot">?</span></h2>
+      <p class="contact-sub">We're always looking for ambitious collaborators.<br />Let's talk about what you're building.</p>
+      <a href="mailto:hello@atelier.studio" class="contact-link">hello@atelier.studio &rarr;</a>
+    </div>
+  </section>
+</MinimalLayout>
+
+<style is:global>
+  :root {
+    --accent: #6c8aff;
+    --accent-hover: #5674e8;
+    --accent-glow: color-mix(in srgb, #6c8aff 15%, transparent);
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --accent: #4a6ae0;
+      --accent-hover: #3d5bc8;
+      --accent-glow: color-mix(in srgb, #4a6ae0 12%, transparent);
+    }
+  }
+</style>
+
+<style>
+  .inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .dot {
+    color: var(--accent);
+  }
+
+  /* Hero */
+  .hero {
+    padding: 8rem 2rem 6rem;
+    background:
+      radial-gradient(ellipse at 30% 80%, color-mix(in srgb, var(--accent) 6%, transparent) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 10%, color-mix(in srgb, #a855f7 4%, transparent) 0%, transparent 50%),
+      var(--bg);
+  }
+
+  .hero-inner.hero-split {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    animation: fade-in 0.8s ease both;
+  }
+
+  .hero-visual {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+
+  .hero-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 3/4;
+  }
+
+  @media (max-width: 768px) {
+    .hero-inner.hero-split {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+
+  .hero-accent {
+    font-style: italic;
+  }
+
+  .hero-sub {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 1.5rem;
+    max-width: 440px;
+  }
+
+  /* Credentials */
+  .credentials {
+    padding: 4rem 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    scroll-margin-top: 80px;
+  }
+
+  .cred-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+
+  .cred {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .cred-value {
+    font-family: var(--display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .cred-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 600px) {
+    .cred-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Services */
+  .services {
+    padding: 5rem 0;
+    scroll-margin-top: 80px;
+  }
+
+  .section-label {
+    font-family: var(--display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .service-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .service {
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    align-items: center;
+    animation: fade-up 0.5s ease both;
+  }
+
+  .service-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .service-image-wrapper {
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+
+  .service-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .service:hover .service-image {
+    transform: scale(1.05);
+  }
+
+  .service:first-child {
+    border-top: 1px solid var(--border);
+  }
+
+  .service-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+  }
+
+  .service-num {
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .service h3 {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .service p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.65;
+    max-width: 600px;
+    padding-left: 3.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .service {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .service-image-wrapper {
+      max-width: 100%;
+      height: 200px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .service-content p {
+      padding-left: 0;
+    }
+  }
+
+  /* Contact */
+  .contact {
+    padding: 6rem 0;
+    text-align: center;
+    background:
+      radial-gradient(ellipse at 50% 50%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 60%),
+      var(--bg);
+    scroll-margin-top: 80px;
+  }
+
+  .contact .inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: fade-in 0.6s ease both;
+  }
+
+  .contact-title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .contact-sub {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .contact-link {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+    margin-top: 0.5rem;
+    transition: opacity 0.15s;
+  }
+
+  .contact-link:hover {
+    opacity: 0.8;
+  }
+</style>
