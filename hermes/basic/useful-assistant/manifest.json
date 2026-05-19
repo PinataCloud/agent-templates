@@ -14,11 +14,30 @@
     "tags": ["assistant", "personal", "productivity", "hermes"],
     "authorName": "Pinata"
   },
+  "secrets": [
+    {
+      "name": "MY_SECRET",
+      "description": "Example secret — any secret your agent might need to work",
+      "required": false
+    }
+  ],
+  "scripts": {
+    "build": "cd ./workspace/projects/hello-test && npm install --include=dev",
+    "start": "cd ./workspace/projects/hello-test && npx vite --host 0.0.0.0 --port 5173"
+  },
   "routes": [
     {
       "port": 5173,
       "path": "/app",
       "protected": false
+    }
+  ],
+  "tasks": [
+    {
+      "name": "daily-check",
+      "prompt": "Run your daily check-in routine",
+      "schedule": "0 9 * * *",
+      "enabled": true
     }
   ]
 }

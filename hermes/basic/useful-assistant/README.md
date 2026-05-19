@@ -14,15 +14,29 @@ Clone it, edit the persona, attach what you need.
 
 ```
 useful-assistant/
-├── manifest.json     # Engine, template metadata, routes. Deployment-time only.
+├── manifest.json     # Engine, template metadata, scripts, routes, tasks.
 ├── README.md         # This file. For humans cloning the template.
 └── workspace/        # Agent cwd. Everything in here is visible to the agent.
     ├── SOUL.md       # Persona. Hermes reloads it fresh each message.
-    └── AGENTS.md     # Runtime conventions the agent reads each session.
+    ├── AGENTS.md     # Runtime conventions the agent reads each session.
+    └── projects/
+        └── hello-test/  # Vite + React + TS starter served at /app
 ```
 
 > The agent only sees what's inside `workspace/` plus the manifest.
 > Anything outside `workspace/` (README, etc.) is for humans.
+
+## The starter project
+
+`workspace/projects/hello-test/` is a Vite + React + TS app, wired
+up by `manifest.json`:
+
+- `scripts.build` runs `npm install` on first deploy
+- `scripts.start` boots Vite on `0.0.0.0:5173`
+- `routes` exposes it at `/app` (unprotected)
+
+Replace it with your own app — just keep `manifest.json`'s scripts and
+routes in sync.
 
 ## How it works
 
