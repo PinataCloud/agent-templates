@@ -1,0 +1,20 @@
+{
+  "name": "multiclaw-vault",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "MultiClaw vault skill — capped, guardrailed DeFi operations for OpenClaw agents",
+  "scripts": {
+    "mc": "tsx src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@multiclaw/core": "^0.1.2",
+    "tsx": "^4.7.0",
+    "viem": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0"
+  }
+}

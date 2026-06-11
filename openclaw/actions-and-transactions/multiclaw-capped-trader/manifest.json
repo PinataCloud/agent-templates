@@ -1,0 +1,98 @@
+{
+  "$schema": "https://agents.pinata.cloud/schemas/manifest.v1.json",
+  "version": 1,
+
+  "agent": {
+    "name": "MultiClaw Capped Trader",
+    "description": "A DeFi trading agent for Base whose authority is capped by the contract, not the prompt. It trades on Aave, Morpho, Uniswap, and aggregators within a hard per-window USD limit enforced on-chain by a Safe Zodiac module (MultiClaw), and can only pay whitelisted recipients. It doubles as a circuit breaker: every 30 minutes it checks your positions for credible threats (exploit, drain, emergency pause, abnormal oracle) and can pull funds back to you — and nowhere else. Even fully prompt-injected, it cannot exceed its cap or send funds anywhere you didn't allow.",
+    "vibe": "A disciplined on-chain operator: trades within a cap it cannot break, watches your positions, and can always bring your funds home.",
+    "emoji": "🛡️"
+  },
+
+  "template": {
+    "slug": "multiclaw-capped-trader",
+    "category": "defi",
+    "tags": [
+      "multiclaw",
+      "defi",
+      "base",
+      "safe",
+      "guardrails",
+      "spending-limits",
+      "trading",
+      "circuit-breaker"
+    ],
+    "authorName": "MultiClaw",
+    "authorUrl": "https://app.multiclaws.xyz"
+  },
+
+  "model": {
+    "primary": "anthropic/claude-haiku-4-5"
+  },
+
+  "skills": [
+    {
+      "cid": "bafybeibkkhalthlnhjvmsyahtyew6q2oahllgrrmxicrssz7cxwvpjgfri",
+      "name": "MultiClaw Vault"
+    }
+  ],
+
+  "secrets": [
+    {
+      "name": "ANTHROPIC_API_KEY",
+      "description": "LLM provider key for the agent engine. The template defaults to a fast, low-cost model (Claude Haiku 4.5) — this agent reads budgets and executes structured commands, so it does not need a frontier model.",
+      "required": true
+    },
+    {
+      "name": "AGENT_PRIVATE_KEY",
+      "description": "Private key of the EOA authorized as the vault's agent. Use a fresh key holding only gas ETH — it is intentionally low-privilege: the on-chain cap and recipient whitelist bound its blast radius even if leaked.",
+      "required": true
+    },
+    {
+      "name": "VAULT_MODULE_ADDRESS",
+      "description": "Deployed DeFiInteractorModule address for this agent's vault on Base mainnet. Get it in one transaction at app.multiclaws.xyz (see README, ~5 minutes).",
+      "required": true
+    },
+    {
+      "name": "OWNER_ADDRESS",
+      "description": "Your address — the safe-haven destination the circuit breaker withdraws to on a credible threat. Add it to the vault's recipient whitelist; the agent verifies this on first run.",
+      "required": true
+    },
+    {
+      "name": "RPC_URL",
+      "description": "Optional RPC override for the selected chain. Defaults to https://mainnet.base.org.",
+      "required": false
+    },
+    {
+      "name": "SUBGRAPH_URL",
+      "description": "Optional MultiClaw subgraph query URL. Needed for the history command and to enumerate the full recipient whitelist; everything else works without it (see README).",
+      "required": false
+    },
+    {
+      "name": "MULTICLAW_CHAIN",
+      "description": "Chain name: base (default). Set baseSepolia only for a testnet rehearsal before going live.",
+      "required": false
+    }
+  ],
+
+  "scripts": {
+    "build": "bash setup.sh"
+  },
+
+  "tasks": [
+    {
+      "name": "daily-budget-report",
+      "prompt": "Run the multiclaw-vault budget command (and history, if SUBGRAPH_URL is set), then report to the owner: remaining allowance for the current window, percent of the cap used, and yesterday's executions. Read-only — do not move funds for this task.",
+      "schedule": "0 9 * * *",
+      "enabled": true
+    },
+    {
+      "name": "watch-and-protect",
+      "prompt": "Assess the protocols and positions you monitor (see USER.md) for credible signs of an exploit, drain, emergency pause, or abnormal oracle behavior. If the owner's funds are at credible risk, withdraw the at-risk position to OWNER_ADDRESS and alert the owner with what you saw and did. Otherwise, confirm all clear and take no action.",
+      "schedule": "*/30 * * * *",
+      "enabled": true
+    }
+  ],
+
+  "routes": []
+}

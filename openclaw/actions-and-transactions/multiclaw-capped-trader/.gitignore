@@ -1,0 +1,7 @@
+.env
+*.env
+workspace/memory/
+workspace/MEMORY.md
+node_modules/
+# keep the bundled skill byte-identical to its ClawHub-pinned CID
+workspace/skills/multiclaw-vault/package-lock.json
