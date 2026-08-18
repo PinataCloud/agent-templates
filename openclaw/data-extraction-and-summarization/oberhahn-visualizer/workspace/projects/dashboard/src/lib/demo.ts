@@ -102,6 +102,18 @@ function compositeString(rand: () => number, total: number): string {
   return parts.join('+')
 }
 
+// The reference ledger contains EXACTLY zero events in a three-hour window every
+// day — the org sleeps. Rhythm's "asleep" arc exists to show that, which needs a
+// recurring hour-of-day gap; a single calendar blackout fills every hour of the
+// dial as soon as the window covers more than one day.
+const QUIET_START_HOUR = 4
+const QUIET_END_HOUR = 7
+
+function isQuietHour(t: number): boolean {
+  const hour = new Date(t).getHours()
+  return hour >= QUIET_START_HOUR && hour < QUIET_END_HOUR
+}
+
 function isWeekend(t: number): boolean {
   const day = new Date(t).getUTCDay()
   return day === 0 || day === 6
@@ -131,8 +143,12 @@ function buildSession(opts: {
   let toolErrors = 0
   let toolsDenied = 0
 
-  for (let turn = 1; turn <= eventCount; turn++) {
+  let turn = 0
+  for (let i = 0; i < eventCount; i++) {
     t += gapRange[0] + Math.floor(rand() * (gapRange[1] - gapRange[0]))
+    // a session running across the quiet window just has a gap in it
+    if (isQuietHour(t)) continue
+    turn += 1
 
     const tokens = makeTokens(rand)
     const costUnknown = rand() < 0.02
@@ -190,10 +206,6 @@ export function demoHistory(days: number): OberEvent[] {
   const t1 = Math.floor(Date.now() / 60_000) * 60_000
   const t0 = t1 - days * 24 * 60 * 60 * 1000
 
-  // a company-wide quiet stretch — nobody works these hours, regardless of individual schedule
-  const blackoutStart = t0 + Math.floor((t1 - t0) * 0.45)
-  const blackoutEnd = blackoutStart + 4 * 60 * 60 * 1000
-
   const events: OberEvent[] = []
   let whaleBudget = 3
   const dayMs = 24 * 60 * 60 * 1000
@@ -207,7 +219,7 @@ export function demoHistory(days: number): OberEvent[] {
       // single session almost never touches two projects. So sessions come in
       // bursts that start within minutes of each other and then overlap — the
       // fact the Loom chart exists to show.
-      const bursts = weekend ? (rand() < 0.3 ? 1 : 0) : 1 + Math.floor(rand() * 2)
+      const bursts = weekend ? (rand() < 0.3 ? 1 : 0) : 2 + Math.floor(rand() * 2)
 
       for (let burst = 0; burst < bursts; burst++) {
         const hourSpan = consumer.endHour - consumer.startHour
@@ -217,7 +229,7 @@ export function demoHistory(days: number): OberEvent[] {
         for (let lane = 0; lane < lanes; lane++) {
           const start = burstStart + Math.floor(rand() * 9 * 60 * 1000)
           if (start < t0 || start > t1) continue
-          if (start >= blackoutStart && start < blackoutEnd) continue
+          if (isQuietHour(start)) continue
 
           const project = weightedPick(rand, PROJECT_WEIGHTS)
           const ephemeral = EPHEMERAL_PROJECTS.has(project)
