@@ -61,8 +61,13 @@ dashboard page reads to build its tabs.
 5. **Rebuild and restart**, then tell your human to refresh:
 
    ```bash
-   cd workspace/projects/dashboard && npm run build && pkill -f 'node dist/server/entry.mjs' || true
+   cd workspace/projects/dashboard
+   npm run build                              # fix any error before going further
+   pkill -f 'node dist/server/entry.mjs'      # the old build is served from memory
+   HOST=0.0.0.0 PORT=4321 nohup node dist/server/entry.mjs > /tmp/dashboard.log 2>&1 &
    ```
+
+   Nothing restarts the server for you — the relaunch is part of the loop.
 
 ## House rules
 

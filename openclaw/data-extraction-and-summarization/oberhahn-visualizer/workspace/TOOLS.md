@@ -19,11 +19,18 @@ Rebuild and restart every time you change code — building alone does not push
 changes live, because the running process keeps the old build in memory:
 
 ```bash
-cd workspace/projects/dashboard && npm run build && pkill -f 'node dist/server/entry.mjs' || true
+cd workspace/projects/dashboard
+npm run build                              # fix any error before going further
+pkill -f 'node dist/server/entry.mjs'      # the old build is served from memory
+HOST=0.0.0.0 PORT=4321 nohup node dist/server/entry.mjs > /tmp/dashboard.log 2>&1 &
 ```
 
-The platform restarts the process automatically after the `pkill`. Give it a
-few seconds, then verify with `curl -sf http://localhost:4321/app`.
+The `nohup … &` is not optional: nothing supervises this process, so a `pkill`
+on its own takes the dashboard down until you start it again (verified
+2026-08-18 — the route stayed 503). `scripts.start` in `manifest.json` runs only
+on container boot. Logs from a hand-started server land in `/tmp/dashboard.log`;
+the boot-time one logs to `/tmp/user-start.log`. Verify with
+`curl -sf -o /dev/null http://localhost:4321/app && echo up`.
 
 ## Port Forwarding
 

@@ -108,11 +108,23 @@ Rebuild and restart after any code change — the running process holds the old
 build in memory, so building alone doesn't ship it:
 
 ```bash
-cd workspace/projects/dashboard && npm run build && pkill -f 'node dist/server/entry.mjs' || true
+cd workspace/projects/dashboard
+npm run build                              # fix any error before going further
+pkill -f 'node dist/server/entry.mjs'      # the old build is served from memory
+HOST=0.0.0.0 PORT=4321 nohup node dist/server/entry.mjs > /tmp/dashboard.log 2>&1 &
 ```
 
-The platform restarts the process for you. Give it a moment, then confirm with
-`curl -sf http://localhost:4321/app` before telling the human it's ready.
+**Relaunch it yourself — nothing restarts it for you.** Killing the old process
+just leaves the dashboard down (verified 2026-08-18: a `pkill` alone left the
+route 503 with no supervisor picking it back up). Then confirm before telling
+your human it's ready:
+
+```bash
+curl -sf -o /dev/null http://localhost:4321/app && echo up
+```
+
+If the build failed, the old process is already gone, so fix the error and run
+the whole loop again rather than leaving the dashboard dark.
 
 Charts live in `src/charts/`, one file per chart, each exporting a class the
 dashboard instantiates. A chart isn't visible until it's added to the
