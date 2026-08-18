@@ -44,7 +44,18 @@ const PROJECT_WEIGHTS: Array<[string, number]> = [
 const EPHEMERAL_PROJECTS = new Set(['sandbox-poc', 'spike-perf'])
 
 const MODELS = ['claude-opus-5', 'claude-sonnet-5', 'claude-haiku-4.5', 'gpt-5-codex']
-const TOOL_NAMES = ['Bash', 'Read', 'Edit', 'Write', 'Grep', 'Glob', 'mcp__github__pr', 'WebFetch']
+// Tool wall-clock is heavily skewed in a real ledger — Bash and Read dominate,
+// MCP calls are rare. Uniform picks would render eight identical bars.
+const TOOL_WEIGHTS: Array<[string, number]> = [
+  ['Bash', 34],
+  ['Read', 22],
+  ['Edit', 13],
+  ['Write', 9],
+  ['Grep', 8],
+  ['Glob', 6],
+  ['WebFetch', 5],
+  ['mcp__github__pr', 3],
+]
 const BRANCHES = ['main', 'feature/onboarding', 'feature/billing-v2', 'fix/flaky-tests', 'chore/deps']
 
 function weightedPick<T>(rand: () => number, items: Array<[T, number]>): T {
@@ -83,7 +94,7 @@ function compositeString(rand: () => number, total: number): string {
   const parts: string[] = []
   let remaining = total
   for (let i = 0; i < n; i++) {
-    const tool = pick(rand, TOOL_NAMES)
+    const tool = weightedPick(rand, TOOL_WEIGHTS)
     const share = i === n - 1 ? remaining : Math.floor(remaining * rand())
     remaining -= share
     parts.push(`${tool}*${Math.max(1, share)}`)
@@ -134,7 +145,9 @@ function buildSession(opts: {
     if (rand() < 0.03) toolErrors += 1
     if (rand() < 0.02) toolsDenied += 1
 
-    const toolMsTotal = Math.floor(rand() * 8000)
+    // roughly a quarter of real events carry no tool timing at all — the Tools
+    // chart's coverage tile exists to surface that, so demo data must show it
+    const toolMsTotal = rand() < 0.28 ? 0 : 200 + Math.floor(rand() * 8000)
 
     events.push({
       time: Math.round(t),
@@ -189,28 +202,38 @@ export function demoHistory(days: number): OberEvent[] {
     const weekend = isWeekend(dayStart)
 
     for (const consumer of CONSUMERS) {
-      const sessionCount = weekend ? (rand() < 0.3 ? 1 : 0) : 1 + Math.floor(rand() * 3)
+      // Real ledgers show PARALLEL LANES, not desk-hopping: one person commonly
+      // has two to five sessions alive at once, each on its own project, and a
+      // single session almost never touches two projects. So sessions come in
+      // bursts that start within minutes of each other and then overlap — the
+      // fact the Loom chart exists to show.
+      const bursts = weekend ? (rand() < 0.3 ? 1 : 0) : 1 + Math.floor(rand() * 2)
 
-      for (let s = 0; s < sessionCount; s++) {
+      for (let burst = 0; burst < bursts; burst++) {
         const hourSpan = consumer.endHour - consumer.startHour
-        const start = dayStart + (consumer.startHour + rand() * hourSpan) * 60 * 60 * 1000
-        if (start < t0 || start > t1) continue
-        if (start >= blackoutStart && start < blackoutEnd) continue
+        const burstStart = dayStart + (consumer.startHour + rand() * hourSpan) * 60 * 60 * 1000
+        const lanes = 1 + Math.floor(rand() * 3)
 
-        const project = weightedPick(rand, PROJECT_WEIGHTS)
-        const ephemeral = EPHEMERAL_PROJECTS.has(project)
-        const whale = !ephemeral && whaleBudget > 0 && rand() < 0.08
-        if (whale) whaleBudget -= 1
+        for (let lane = 0; lane < lanes; lane++) {
+          const start = burstStart + Math.floor(rand() * 9 * 60 * 1000)
+          if (start < t0 || start > t1) continue
+          if (start >= blackoutStart && start < blackoutEnd) continue
 
-        const eventCount = ephemeral
-          ? 3 + Math.floor(rand() * 10)
-          : whale
-            ? 800 + Math.floor(rand() * 1200)
-            : 10 + Math.floor(rand() * 200)
+          const project = weightedPick(rand, PROJECT_WEIGHTS)
+          const ephemeral = EPHEMERAL_PROJECTS.has(project)
+          const whale = !ephemeral && whaleBudget > 0 && rand() < 0.08
+          if (whale) whaleBudget -= 1
 
-        const gapRange: [number, number] = ephemeral ? [500, 5000] : [2000, 47000]
+          const eventCount = ephemeral
+            ? 3 + Math.floor(rand() * 10)
+            : whale
+              ? 800 + Math.floor(rand() * 1200)
+              : 10 + Math.floor(rand() * 200)
 
-        events.push(...buildSession({ rand, consumer, start, project, eventCount, gapRange }))
+          const gapRange: [number, number] = ephemeral ? [500, 5000] : [2000, 47000]
+
+          events.push(...buildSession({ rand, consumer, start, project, eventCount, gapRange }))
+        }
       }
     }
   }
