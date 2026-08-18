@@ -8,6 +8,9 @@ Agents that read, process, and condense information into usable outputs.
 - Report generation
 - Indexing / transforming data
 
+## Templates
+- **[Oberhahn Visualizer](./oberhahn-visualizer)** — Charts an organization's AI-spend ledger on a live Astro dashboard, and builds new charts on request.
+
 ## Example Templates
 - **Graph Summarizer** — Analyze graph data and produce human-readable summaries.
 - **PDF Summarization Agent** — Extract and summarize key information from PDF documents.

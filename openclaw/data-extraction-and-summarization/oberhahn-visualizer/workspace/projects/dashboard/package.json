@@ -1,0 +1,19 @@
+{
+  "name": "oberhahn-dashboard",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node dist/server/entry.mjs"
+  },
+  "dependencies": {
+    "@astrojs/node": "^10.0.4",
+    "astro": "^6.1.6",
+    "d3": "^7.9.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "@types/node": "^22.10.2"
+  }
+}

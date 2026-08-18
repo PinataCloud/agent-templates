@@ -1,0 +1,181 @@
+---
+import DashLayout from '../layouts/DashLayout.astro';
+
+export const prerender = false;
+---
+
+<DashLayout
+  title="Oberhahn Visualizer"
+  description="A live dashboard over the Oberhahn AI-spend ledger: where the money goes, who spends it, and when."
+>
+  <script>
+    import { CHARTS, chartById } from '../charts/index';
+    import { RANGES, loadHistory, pollNew } from '../lib/client';
+    import { extent } from '../lib/aggregate';
+    import { fmtMoney, fmtRange } from '../lib/format';
+    import type { Chart, ChartApi, ChartMeta, OberEvent } from '../lib/types';
+
+    const POLL_MS = 30_000;
+
+    const host = document.getElementById('chart-host') as HTMLElement;
+    const tabsEl = document.getElementById('chart-tabs') as HTMLElement;
+    const rangeEl = document.getElementById('range-switch') as HTMLElement;
+    const badgeEl = document.getElementById('mode-badge') as HTMLElement;
+    const totalEl = document.getElementById('window-total') as HTMLElement;
+    const noteEl = document.getElementById('dash-note') as HTMLElement;
+
+    const params = new URLSearchParams(location.search);
+    let days = Number(params.get('range')) || RANGES[0].days;
+    if (!RANGES.some((r) => r.days === days)) days = RANGES[0].days;
+    let active: ChartMeta = chartById(params.get('chart'));
+
+    let events: OberEvent[] = [];
+    let demo = false;
+    const instances = new Map<string, Chart>();
+
+    // One ChartApi for the whole page — charts read through it and never fetch.
+    const api: ChartApi = {
+      getEvents: () => events,
+      getRange: () => extent(events),
+      isDemo: () => demo,
+    };
+
+    function syncUrl() {
+      const next = new URLSearchParams(location.search);
+      next.set('chart', active.id);
+      next.set('range', String(days));
+      history.replaceState(null, '', `${location.pathname}?${next}`);
+    }
+
+    function setMode(kind: 'live' | 'demo' | 'error', title: string) {
+      badgeEl.className = `badge ${kind}`;
+      badgeEl.textContent = kind;
+      badgeEl.title = title;
+    }
+
+    function refreshSummary() {
+      const total = events.reduce((sum, e) => sum + e.cost, 0);
+      const unknown = events.filter((e) => e.costUnknown).length;
+      totalEl.textContent = fmtMoney(total);
+      if (events.length === 0) {
+        noteEl.textContent = '';
+        return;
+      }
+      const { t0, t1 } = extent(events);
+      const parts = [
+        `${events.length.toLocaleString()} events · ${fmtRange(t0, t1)}`,
+        unknown > 0 ? `${unknown.toLocaleString()} with unknown cost` : null,
+      ].filter(Boolean);
+      noteEl.textContent = parts.join(' · ');
+    }
+
+    function showChart(meta: ChartMeta) {
+      active = meta;
+      for (const btn of tabsEl.querySelectorAll('button')) {
+        btn.setAttribute('aria-selected', String(btn.dataset.chart === meta.id));
+      }
+      let chart = instances.get(meta.id);
+      if (!chart) {
+        chart = new meta.ctor(host, api);
+        instances.set(meta.id, chart);
+      }
+      chart.render();
+      syncUrl();
+    }
+
+    function renderActive() {
+      instances.get(active.id)?.render();
+    }
+
+    // Switching charts tears the previous one down: each owns the single host
+    // element, so two live instances would fight over it.
+    function selectChart(meta: ChartMeta) {
+      if (meta.id === active.id) return;
+      const current = instances.get(active.id);
+      if (current) {
+        current.destroy();
+        instances.delete(active.id);
+      }
+      showChart(meta);
+    }
+
+    function buildTabs() {
+      for (const meta of CHARTS) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.chart = meta.id;
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-selected', String(meta.id === active.id));
+        btn.title = meta.blurb;
+        btn.textContent = meta.title;
+        btn.addEventListener('click', () => selectChart(meta));
+        tabsEl.appendChild(btn);
+      }
+    }
+
+    function buildRanges() {
+      for (const range of RANGES) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.days = String(range.days);
+        btn.setAttribute('aria-pressed', String(range.days === days));
+        btn.textContent = range.label;
+        btn.addEventListener('click', () => {
+          if (range.days === days) return;
+          days = range.days;
+          for (const b of rangeEl.querySelectorAll('button')) {
+            b.setAttribute('aria-pressed', String(Number(b.dataset.days) === days));
+          }
+          void load();
+        });
+        rangeEl.appendChild(btn);
+      }
+    }
+
+    async function load() {
+      setMode('demo', 'Loading…');
+      badgeEl.textContent = 'loading';
+      try {
+        const result = await loadHistory(days);
+        events = result.events;
+        demo = result.demo;
+        setMode(
+          demo ? 'demo' : 'live',
+          demo
+            ? `Generated data — ${result.reason ?? 'no ledger available'}`
+            : 'Live data from the Oberhahn ledger',
+        );
+      } catch (err) {
+        events = [];
+        demo = false;
+        setMode('error', err instanceof Error ? err.message : 'failed to load the ledger');
+      }
+      refreshSummary();
+      renderActive();
+      syncUrl();
+    }
+
+    function lastEventTime(): number {
+      return events.length ? events[events.length - 1].time : Date.now() - days * 864e5;
+    }
+
+    async function poll() {
+      if (document.hidden) return;
+      try {
+        const fresh = await pollNew(lastEventTime(), demo);
+        if (fresh.length === 0) return;
+        events = events.concat(fresh).sort((a, b) => a.time - b.time);
+        refreshSummary();
+        renderActive();
+      } catch {
+        // a failed poll is not worth disturbing the view over — the next one retries
+      }
+    }
+
+    buildTabs();
+    buildRanges();
+    showChart(active);
+    void load();
+    setInterval(() => void poll(), POLL_MS);
+  </script>
+</DashLayout>

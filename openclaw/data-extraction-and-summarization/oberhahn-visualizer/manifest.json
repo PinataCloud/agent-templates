@@ -1,0 +1,42 @@
+{
+  "$schema": "https://agents.pinata.cloud/schemas/manifest.v1.json",
+  "version": 1,
+
+  "agent": {
+    "name": "Oberhahn Visualizer",
+    "description": "Your personal AI-spend analyst. It runs a live dashboard against your Oberhahn ledger, answers questions about who ran what agent, on which project, with which model, and builds new charts the moment you ask for one.",
+    "vibe": "reads the ledger, finds the shape, draws it clean",
+    "emoji": "📊"
+  },
+
+  "template": {
+    "slug": "oberhahn-visualizer",
+    "category": "analytics",
+    "tags": ["astro", "d3", "dashboard", "analytics", "observability", "ai-spend", "ssr", "data-visualization"],
+    "authorName": "Pinata"
+  },
+
+  "tasks": [],
+
+  "secrets": [
+    {
+      "name": "OBERHAHN_API_KEY",
+      "description": "Read API key (starts with oak_) from your Oberhahn dashboard under Settings → API Keys. Required to show real ledger data; without it the dashboard runs in demo mode on generated data.",
+      "required": false
+    },
+    {
+      "name": "OBERHAHN_URL",
+      "description": "Base URL of your Oberhahn instance. Defaults to https://app.oberhahn.com — set this only if you run a self-hosted or staging instance.",
+      "required": false
+    }
+  ],
+
+  "scripts": {
+    "build": "cd workspace/projects/dashboard && npm ci && npm run build",
+    "start": "cd workspace/projects/dashboard && HOST=0.0.0.0 PORT=4321 node dist/server/entry.mjs"
+  },
+
+  "routes": [
+    { "port": 4321, "path": "/app", "protected": false }
+  ]
+}

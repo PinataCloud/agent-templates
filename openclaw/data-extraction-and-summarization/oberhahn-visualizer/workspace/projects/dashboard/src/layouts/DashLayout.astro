@@ -1,0 +1,43 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  brand?: string;
+}
+
+const { title, description, brand = 'Oberhahn' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <main class="dash">
+      <header class="dash-head">
+        <div class="dash-brand">{brand} <span>Visualizer</span></div>
+        <div id="mode-badge" class="badge" title="Loading the ledger">loading</div>
+
+        <div class="dash-spacer"></div>
+
+        <div class="dash-total">
+          <label for="window-total">Window spend</label>
+          <b id="window-total">—</b>
+        </div>
+
+        <div class="switch" id="range-switch" role="group" aria-label="History window"></div>
+      </header>
+
+      <nav class="dash-tabs" id="chart-tabs" role="tablist" aria-label="Charts"></nav>
+
+      <p class="dash-note" id="dash-note"></p>
+
+      <section class="chart-host" id="chart-host" role="tabpanel"></section>
+
+      <slot />
+    </main>
+  </body>
+</html>
